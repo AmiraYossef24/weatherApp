@@ -1,0 +1,29 @@
+<!-- drawer_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/home"
+        android:title="@string/home" />
+    <item
+        android:id="@+id/nav_search"
+        android:icon="@drawable/map2"
+        android:title="@string/map" />
+
+    <item
+        android:id="@+id/nav_save"
+        android:icon="@drawable/saved"
+        android:title="@string/saved" />
+
+    <item
+        android:id="@+id/nav_alert"
+        android:icon="@drawable/alert"
+        android:title="@string/alert" />
+
+    <item
+        android:id="@+id/nav_setting"
+        android:icon="@drawable/setting"
+        android:title="setting" />
+
+</menu>

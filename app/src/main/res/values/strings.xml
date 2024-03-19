@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">weatherApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="weather_details">Weather Details</string>
+    <string name="feel_like">Feels Like</string>
+    <string name="nne_wind">NNE Wind</string>
+    <string name="humidity">Humidity</string>
+    <string name="uv">UV</string>
+    <string name="visibility">Visibility</string>
+    <string name="air_pressure">Air pressure</string>
+    <string name="weather_forecast">15 Day weather forecast</string>
+    <string name="sea">Sea level</string>
+    <string name="desc">Description</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="search">Search</string>
+    <string name="favourite">Favourite</string>
+    <string name="alert">Notification</string>
+    <string name="home">Home</string>
+    <string name="saved">Saved</string>
+    <string name="search_here">Search here</string>
+    <string name="map">Map</string>
+    <string name="save_Location">Do you want to save Location ?</string>
+
+</resources>
