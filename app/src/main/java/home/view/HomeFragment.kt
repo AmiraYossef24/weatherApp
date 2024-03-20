@@ -39,7 +39,6 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import home.viewModel.HomeViewModel
 import home.viewModel.HomeViewModelFactory
@@ -266,31 +265,31 @@ class HomeFragment : Fragment() {
                     day1Des.text=it[0].weather[0].description
                     val iconDrawable = ContextCompat.getDrawable(requireContext(), setIcon(it[0].weather[0].icon))
                     day1Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, null, null)
-                    day1Temp.text=convertToCelsiusString(it[0].main.temp_min,it[0].main.temp_min)
+                    day1Temp.text=convertToCelsiusString(it[0].main.temp_min,it[0].main.temp_max)
 
                     day2Name.text=getDayName(it[1].dt_txt)
                     day2Des.text=it[1].weather[0].description
                     val iconDrawable2 = ContextCompat.getDrawable(requireContext(), setIcon(it[1].weather[0].icon))
                     day2Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable2, null, null, null)
-                    day2Temp.text=convertToCelsiusString(it[1].main.temp_min,it[1].main.temp_min)
+                    day2Temp.text=convertToCelsiusString(it[1].main.temp_min,it[1].main.temp_max)
 
                     day3Name.text=getDayName(it[2].dt_txt)
                     day3Des.text=it[2].weather[0].description
                     val iconDrawable3 = ContextCompat.getDrawable(requireContext(), setIcon(it[2].weather[0].icon))
                     day3Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable3, null, null, null)
-                    day3Temp.text=convertToCelsiusString(it[2].main.temp_min,it[2].main.temp_min)
+                    day3Temp.text=convertToCelsiusString(it[2].main.temp_min,it[2].main.temp_max)
 
                     day4Name.text=getDayName(it[3].dt_txt)
                     day4Des.text=it[3].weather[0].description
                     val iconDrawable4 = ContextCompat.getDrawable(requireContext(), setIcon(it[3].weather[0].icon))
                     day4Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable4, null, null, null)
-                    day4Temp.text=convertToCelsiusString(it[3].main.temp_min,it[3].main.temp_min)
+                    day4Temp.text=convertToCelsiusString(it[3].main.temp_min,it[3].main.temp_max)
 
                     day5Name.text=getDayName(it[4].dt_txt)
                     day5Des.text=it[4].weather[0].description
                     val iconDrawable5 = ContextCompat.getDrawable(requireContext(), setIcon(it[4].weather[0].icon))
                     day5Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable5, null, null, null)
-                    day5Temp.text=convertToCelsiusString(it[4].main.temp_min,it[4].main.temp_min)
+                    day5Temp.text=convertToCelsiusString(it[4].main.temp_min,it[4].main.temp_max)
 
 
                 }else if(it.isEmpty()) {
@@ -444,7 +443,7 @@ class HomeFragment : Fragment() {
         if(icon=="03n" || icon =="03d"){
             return R.drawable._3n
         }
-        if(icon=="01n" || icon=="01d"){
+        if(icon=="01n" ){
             return R.drawable._1d
         }
         if(icon=="04n"){
@@ -459,7 +458,10 @@ class HomeFragment : Fragment() {
         if(icon=="10n"){
             return R.drawable._0n
         }
-        return R.drawable.sunny
+        if(icon=="01d"){
+            return R.drawable.sunny
+        }
+        return R.drawable._4n
     }
 
 }

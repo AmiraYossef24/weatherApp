@@ -1,6 +1,10 @@
 package countrydetails.view
 
 import AppDB.WeatherLocalDataSource
+import android.content.Context
+import android.location.Address
+import android.location.Geocoder
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,6 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
@@ -22,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.example.weatherapp.R
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.material.navigation.NavigationView
 import home.view.HomeListAdapter
 import home.viewModel.HomeViewModel
@@ -29,6 +36,11 @@ import home.viewModel.HomeViewModelFactory
 import kotlinx.coroutines.launch
 import model.WeatherRepository
 import network.weatherRemoteDataSource
+import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.Locale
 
 
 class CountryDetailsFragment : Fragment() {
@@ -36,7 +48,7 @@ class CountryDetailsFragment : Fragment() {
     lateinit  var text : TextView
     lateinit var minMax : TextView
     lateinit var degree : TextView
-    //lateinit var adapter: HomeListAdapter
+    lateinit var adapter: HomeListAdapter
     lateinit var date : TextView
     lateinit var recyclerView: RecyclerView
     lateinit var desc : TextView
@@ -74,8 +86,8 @@ class CountryDetailsFragment : Fragment() {
     lateinit var sunrise : TextView
 
     lateinit var menu_icon : ImageView
-//    lateinit var homeFactory : HomeViewModelFactory
-//    lateinit var viewModel : HomeViewModel
+    lateinit var homeFactory : HomeViewModelFactory
+    lateinit var  viewModel : HomeViewModel
     lateinit var  backgroundContainer: CoordinatorLayout
     lateinit var  weatherAnimationView: LottieAnimationView
     lateinit var  sunriseAnimationView: LottieAnimationView
@@ -86,8 +98,19 @@ class CountryDetailsFragment : Fragment() {
 
     private lateinit var navController: NavController
 
+    var lan : Double = 0.0
+    var lat : Double = 0.0
+    lateinit  var des : String
+    var max : Double =0.0
+    var min : Double = 0.0
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private val API_KEY="af0b74520668db5033dea0b93e9a70c3"
+    private val TAG="CountryDetailsFragment"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
 
     }
 
@@ -99,6 +122,7 @@ class CountryDetailsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_country_details, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         text = view.findViewById(R.id.myDetailsTxView)
@@ -146,7 +170,7 @@ class CountryDetailsFragment : Fragment() {
         drawer.addDrawerListener(toggle)
         toggle.syncState()
 
-        //adapter= HomeListAdapter()
+        adapter= HomeListAdapter()
         recyclerView=view.findViewById(R.id.tempDetailsRecycle)
         country=view.findViewById(R.id.countryDetailsTxID)
         backgroundContainer=view.findViewById(R.id.detailsBackgroundContainer)
@@ -157,16 +181,52 @@ class CountryDetailsFragment : Fragment() {
         sunriseAnimationView.playAnimation()
         starsAnimationView.setAnimation(R.raw.stars)
         starsAnimationView.playAnimation()
+        weatherAnimationView.setAnimation(R.raw.snow_anim)
+        weatherAnimationView.playAnimation()
 
-//        homeFactory = HomeViewModelFactory(
-//            WeatherRepository.getInstance(
-//                weatherRemoteDataSource.getInstance(),
-//                WeatherLocalDataSource(requireContext())
-//            )
-//
-//        )
-//
-//        viewModel = ViewModelProvider(this, homeFactory).get(HomeViewModel::class.java)
+        var lat= arguments?.let { CountryDetailsFragmentArgs.fromBundle(it).lat }
+        Log.i(TAG, "lat from countryDetails = : ${lat}")
+        var lon= arguments?.let { CountryDetailsFragmentArgs.fromBundle(it).lon }
+        Log.i(TAG, "lon from countryDetails = : ${lon}")
+        var nameStr= arguments?.let { CountryDetailsFragmentArgs.fromBundle(it).countryName }
+
+
+
+
+
+        homeFactory = HomeViewModelFactory(
+            WeatherRepository.getInstance(
+                weatherRemoteDataSource.getInstance(),
+                WeatherLocalDataSource(requireContext())
+            )
+
+        )
+
+        viewModel = ViewModelProvider(this, homeFactory).get(HomeViewModel::class.java)
+        var countryName = arguments?.let { CountryDetailsFragmentArgs.fromBundle(it).countryName }
+        Log.i(TAG, "cuntry name from details = : ${countryName}")
+        if (countryName != null) {
+            getLocationFromAddress(requireContext(),countryName)?.let {
+                getLocationFromAddress(requireContext(),countryName)?.let { it1 ->
+                    viewModel.getCurrentWeather(
+                        it.first,
+                        it1
+                            .second,API_KEY)
+
+                    viewModel.getWeatherDetails(
+                        it.first,
+                        it1
+                            .second,API_KEY)
+
+                    viewModel.getFiveDays(
+                        it.first,
+                        it1
+                            .second,API_KEY)
+
+                }
+            }
+        }
+
 
         menu_icon.setOnClickListener {
             if (drawer.isDrawerOpen(GravityCompat.END)) {
@@ -194,89 +254,163 @@ class CountryDetailsFragment : Fragment() {
             false
         }
 
-//        viewModel.weather.observe(viewLifecycleOwner) { current_weather ->
-//            min=current_weather.main.temp_min
-//            max=current_weather.main.temp_max
-//            text.text = current_weather.name
-//            minMax.text = convertToCelsiusString(min,max)
-//            degree.text=current_weather.getTemperatureInCelsius()
-//            date.text=current_weather.getDayOfWeek()
-//            desc.text=current_weather.weather.get(0).description
-//            country.text=current_weather.sys.country
-//            des=current_weather.weather.get(0).description
-//            updateBackgroundAnimation(des)
-//
-//            Log.i("TAG", "onViewCreated:  The WEAAA = $current_weather ")
-//        }
-        val layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL,false)
-//        recyclerView.adapter = adapter
-//        recyclerView.layoutManager = layoutManager
 
-//        lifecycleScope.launch {
-//            viewModel.details.observe(viewLifecycleOwner) { details ->
-//                adapter.submitList(details.list)
+        viewModel.weather.observe(viewLifecycleOwner) { current_weather ->
+            min=current_weather.main.temp_min
+            max=current_weather.main.temp_max
+            text.text = nameStr
+            minMax.text = convertToCelsiusString(min,max)
+            degree.text=current_weather.getTemperatureInCelsius()
+            date.text=current_weather.getDayOfWeek()
+            desc.text=current_weather.weather.get(0).description
+            country.text=current_weather.sys.country
+
+            Log.i("TAG", "onViewCreated:  The WEAAA = $current_weather ")
+        }
+        val layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL,false)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = layoutManager
+
+        lifecycleScope.launch {
+            viewModel.details.observe(viewLifecycleOwner) { details ->
+                adapter.submitList(details.list)
 //                sunset.text=convertToAmPmFormat(details.city.sunset)
 //                sunrise.text=convertToAmPmFormat(details.city.sunrise)
-//
-//                Log.i(TAG, "fells like >>>>>>>>>> ${details.list.get(0).main.feels_like}")
-//            }
-//
-//        }
 
-//
-//        lifecycleScope.launch {
-//            viewModel.fiveDays.observe(viewLifecycleOwner){
-//                Log.i(TAG, "the list of 5 days = : ${it.get(0).dt_txt } and second day is  = : ${it.get(1).dt_txt} and third day is = : ${it.get(2).dt_txt}")
-//                if(it.isNotEmpty()){
-//                    feel.text=getTemperatureInCelsius(it[0].main.feels_like)
-//                    wind.text="${it[0].wind.speed} mi/h"
-//                    hum.text="${it[0].main.humidity}%"
-//                    uv.text="Very week"
-//                    visibility.text="${it[0].visibility} km"
-//                    air.text="${it[0].main.pressure} hPa"
-//                    sea.text="1015 m"
-//                    desc2.text=it[0].weather[0].description
-//                    day1Name.text="Today"
-//                    day1Des.text=it[0].weather[0].description
-//                    val iconDrawable = ContextCompat.getDrawable(requireContext(), setIcon(it[0].weather[0].icon))
-//                    day1Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, null, null)
-//                    day1Temp.text=convertToCelsiusString(it[0].main.temp_min,it[0].main.temp_min)
-//
-//                    day2Name.text=getDayName(it[1].dt_txt)
-//                    day2Des.text=it[1].weather[0].description
-//                    val iconDrawable2 = ContextCompat.getDrawable(requireContext(), setIcon(it[1].weather[0].icon))
-//                    day2Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable2, null, null, null)
-//                    day2Temp.text=convertToCelsiusString(it[1].main.temp_min,it[1].main.temp_min)
-//
-//                    day3Name.text=getDayName(it[2].dt_txt)
-//                    day3Des.text=it[2].weather[0].description
-//                    val iconDrawable3 = ContextCompat.getDrawable(requireContext(), setIcon(it[2].weather[0].icon))
-//                    day3Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable3, null, null, null)
-//                    day3Temp.text=convertToCelsiusString(it[2].main.temp_min,it[2].main.temp_min)
-//
-//                    day4Name.text=getDayName(it[3].dt_txt)
-//                    day4Des.text=it[3].weather[0].description
-//                    val iconDrawable4 = ContextCompat.getDrawable(requireContext(), setIcon(it[3].weather[0].icon))
-//                    day4Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable4, null, null, null)
-//                    day4Temp.text=convertToCelsiusString(it[3].main.temp_min,it[3].main.temp_min)
-//
-//                    day5Name.text=getDayName(it[4].dt_txt)
-//                    day5Des.text=it[4].weather[0].description
-//                    val iconDrawable5 = ContextCompat.getDrawable(requireContext(), setIcon(it[4].weather[0].icon))
-//                    day5Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable5, null, null, null)
-//                    day5Temp.text=convertToCelsiusString(it[4].main.temp_min,it[4].main.temp_min)
-//
-//
-//                }else if(it.isEmpty()) {
-//
-//                }
-//
-//            }
-//        }
+                Log.i(TAG, "fells like >>>>>>>>>> ${details.list.get(0).main.feels_like}")
+            }
+
+        }
 
 
+        lifecycleScope.launch {
+            viewModel.fiveDays.observe(viewLifecycleOwner){
+                Log.i(TAG, "the list of 5 days = : ${it.get(0).dt_txt } and second day is  = : ${it.get(1).dt_txt} and third day is = : ${it.get(2).dt_txt}")
+                if(it.isNotEmpty()){
+                    feel.text=getTemperatureInCelsius(it[0].main.feels_like)
+                    Log.i(TAG, "feel text : ${getTemperatureInCelsius(it[0].main.feels_like)}")
+                    wind.text="${it[0].wind.speed} mi/h"
+                    hum.text="${it[0].main.humidity}%"
+                    uv.text="Very week"
+                    visibility.text="${it[0].visibility} km"
+                    air.text="${it[0].main.pressure} hPa"
+                    sea.text="1015 m"
+                    desc2.text=it[0].weather[0].description
+                    day1Name.text="Today"
+                    day1Des.text=it[0].weather[0].description
+                    val iconDrawable = ContextCompat.getDrawable(requireContext(), setIcon(it[0].weather[0].icon))
+                    day1Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, null, null)
+                    day1Temp.text=convertToCelsiusString(it[0].main.temp_min,it[0].main.temp_max)
+
+                    day2Name.text=getDayName(it[1].dt_txt)
+                    day2Des.text=it[1].weather[0].description
+                    val iconDrawable2 = ContextCompat.getDrawable(requireContext(), setIcon(it[1].weather[0].icon))
+                    day2Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable2, null, null, null)
+                    day2Temp.text=convertToCelsiusString(it[1].main.temp_min,it[1].main.temp_max)
+
+                    day3Name.text=getDayName(it[2].dt_txt)
+                    day3Des.text=it[2].weather[0].description
+                    val iconDrawable3 = ContextCompat.getDrawable(requireContext(), setIcon(it[2].weather[0].icon))
+                    day3Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable3, null, null, null)
+                    day3Temp.text=convertToCelsiusString(it[2].main.temp_min,it[2].main.temp_max)
+
+                    day4Name.text=getDayName(it[3].dt_txt)
+                    day4Des.text=it[3].weather[0].description
+                    val iconDrawable4 = ContextCompat.getDrawable(requireContext(), setIcon(it[3].weather[0].icon))
+                    day4Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable4, null, null, null)
+                    day4Temp.text=convertToCelsiusString(it[3].main.temp_min,it[3].main.temp_max)
+
+                    day5Name.text=getDayName(it[4].dt_txt)
+                    day5Des.text=it[4].weather[0].description
+                    val iconDrawable5 = ContextCompat.getDrawable(requireContext(), setIcon(it[4].weather[0].icon))
+                    day5Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable5, null, null, null)
+                    day5Temp.text=convertToCelsiusString(it[4].main.temp_min,it[4].main.temp_max)
+
+
+                }else if(it.isEmpty()) {
+
+                    Toast.makeText(requireContext(),"is empty ",Toast.LENGTH_LONG).show()
+                }
+
+            }
+        }
 
     }
+    fun convertToCelsiusString(tempMin: Double, tempMax: Double): String {
+        val tempMinCelsius = tempMin - 273.15
+        val tempMaxCelsius = tempMax - 273.15
+
+        // Format the temperature strings
+        val formattedTempMin = String.format("%.1f", tempMinCelsius)
+        val formattedTempMax = String.format("%.1f", tempMaxCelsius)
+
+        // Return the formatted string with the Celsius degree symbol
+        return "$formattedTempMin° / $formattedTempMax°"
+    }
+     fun getLocationFromAddress(context: Context, address: String): Pair<Double, Double>? {
+        val geocoder = Geocoder(context)
+        return try {
+            val addresses: List<Address> = geocoder.getFromLocationName(address, 1)!!
+            if (addresses.isNotEmpty()) {
+                val latitude = addresses[0].latitude
+                val longitude = addresses[0].longitude
+                Pair(latitude, longitude)
+            } else {
+                null
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun convertToAmPmFormat(dtTxt: Long): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+        val localDateTime = LocalDateTime.parse(dtTxt.toString(), formatter)
+        val amPmFormatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
+        return localDateTime.format(amPmFormatter)
+    }
+
+    fun setIcon(icon : String ) : Int {
+        if (icon == "04d"){
+            return R.drawable._4d
+        }
+        if(icon=="03n" || icon =="03d"){
+            return R.drawable._3n
+        }
+        if(icon=="01n" || icon=="01d"){
+            return R.drawable._1d
+        }
+        if(icon=="04n"){
+            return R.drawable._4n
+        }
+        if(icon=="02n" || icon=="02d"){
+            return R.drawable._2d
+        }
+        if(icon=="10d"){
+            return R.drawable._0d
+        }
+        if(icon=="10n"){
+            return R.drawable._0n
+        }
+        return R.drawable.sunny
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getDayName(dt: String): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val dateTime = LocalDateTime.parse(dt, formatter)
+        val dayOfWeek = dateTime.dayOfWeek
+        return dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
+    }
+
+    fun getTemperatureInCelsius(temp : Double): String {
+        val temperatureCelsius = temp - 273.15
+        return String.format("%.1f°C", temperatureCelsius)
+    }
+
 
 
 }

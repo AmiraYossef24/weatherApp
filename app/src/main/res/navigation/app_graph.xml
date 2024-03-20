@@ -41,27 +41,27 @@
             android:id="@+id/action_savedLocationFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
         <action
-            android:id="@+id/action_savedLocationFragment_to_countryDetailsFragment"
-            app:destination="@id/countryDetailsFragment" />
+            android:id="@+id/action_savedLocationFragment_to_countryDetailsFragment2"
+            app:destination="@id/countryDetailsFragment2" />
+
     </fragment>
     <fragment
-        android:id="@+id/countryDetailsFragment"
+        android:id="@+id/countryDetailsFragment2"
         android:name="countrydetails.view.CountryDetailsFragment"
         android:label="CountryDetailsFragment" >
-        <action
-            android:id="@+id/action_countryDetailsFragment_to_savedLocationFragment"
-            app:destination="@id/savedLocationFragment" />
-        <action
-            android:id="@+id/action_countryDetailsFragment_to_myMapFragment"
-            app:destination="@id/myMapFragment" />
-        <action
-            android:id="@+id/action_countryDetailsFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+
 
         <argument
-            android:name="location"
-            app:argType="com.example.weatherapp.Location"
-            />
-
+            android:name="lat"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="lon"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="countryName"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>

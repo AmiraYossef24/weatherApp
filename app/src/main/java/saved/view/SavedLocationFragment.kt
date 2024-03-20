@@ -2,12 +2,15 @@ package saved.view
 
 import AppDB.WeatherLocalDataSource
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +20,14 @@ import com.example.weatherapp.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import home.viewModel.HomeViewModel
 import home.viewModel.HomeViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import model.Location
 import model.WeatherRepository
 import network.weatherRemoteDataSource
 import saved.viewModel.SavedViewModel
@@ -33,8 +44,7 @@ class SavedLocationFragment : Fragment() {
     lateinit var savedViewModel: SavedViewModel
     lateinit var adapter  : SavedListAdapter
     lateinit var navController : NavController
-
-
+    private val sharedFlow = MutableSharedFlow<List<Location>>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,16 +69,29 @@ class SavedLocationFragment : Fragment() {
         fabBtn=view.findViewById(R.id.fabMapBtn)
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
 
-        adapter= SavedListAdapter(navController)
-        val layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL,false)
-        savedRecycle.adapter = adapter
-        savedRecycle.layoutManager = layoutManager
 
         fabBtn.setOnClickListener {
             val navController =
                 Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
             navController.navigate(R.id.myMapFragment)
         }
+
+        search.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filteredStudents()
+                lifecycleScope.launch {
+                    sharedFlow.emit(s.toString())
+                }
+            }
+
+
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+
         savedViewModelFactory = SavedViewModelFactory(
             WeatherRepository.getInstance(
                 weatherRemoteDataSource.getInstance(),
@@ -78,12 +101,33 @@ class SavedLocationFragment : Fragment() {
         )
         savedViewModel = ViewModelProvider(this, savedViewModelFactory).get(SavedViewModel::class.java)
         savedViewModel.getAllSavedLocations()
-        savedViewModel.locationList.observe(viewLifecycleOwner){
-            adapter.submitLocatinosList(it)
-        }
+        adapter= SavedListAdapter(requireContext(),navController,savedViewModel,viewLifecycleOwner)
+        val layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL,false)
+        savedRecycle.adapter = adapter
+        savedRecycle.layoutManager = layoutManager
+
+//        lifecycleScope.launch {
+//            savedViewModel.locationList.collect() {
+//                adapter.submitLocationsList(it)
+//            }
+//        }
         animationView.setAnimation(R.raw.snow_anim)
         animationView.playAnimation()
 
     }
+    private fun filteredStudents() {
+        val scope = CoroutineScope(Dispatchers.Main)
+
+        scope.launch {
+            sharedFlow.collect { filterText ->
+                val filteredList = withContext(Dispatchers.Default) {
+                    savedViewModel.locationList.filter { it.contains(filterText, ignoreCase = true) }
+                }
+                adapter?.submitLocationsList(filteredList)
+            }
+        }
+    }
+
+
 
 }

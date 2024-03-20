@@ -8,6 +8,7 @@ import android.location.Geocoder
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -162,17 +163,33 @@ class myMapFragment : Fragment() ,OnMapReadyCallback {
             snackbar.setAction("Save") {
                 val geocoder = Geocoder(requireContext(), Locale.getDefault())
                 val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-                val countryName = addresses?.firstOrNull()?.countryName
-                if (!countryName.isNullOrEmpty()) {
-                    val location = Location(countryName,latLng.latitude,latLng.longitude)
-                    viewModel.insert(location)
-                    Toast.makeText(requireContext(),"isert ${countryName} done",Toast.LENGTH_LONG).show()
+                if (addresses != null) {
+                    if (addresses.isNotEmpty()) {
+                        val address = addresses[0]
+                        val countryName = address.countryName
+                        val locality = address.locality // City
+                        val subLocality = address.subLocality // District or Village
+                        val adminArea = address.adminArea // Governorate
+                        val locationName = if (!subLocality.isNullOrEmpty()) {
+                            subLocality
+                        } else if (!locality.isNullOrEmpty()) {
+                            locality
+                        } else {
+                            adminArea
+                        } ?: countryName // If no detailed location information is available, fallback to country name
+                        val location = Location(locationName, latLng.latitude, latLng.longitude)
+                        viewModel.insert(location)
+                        Toast.makeText(requireContext(), "Inserted $locationName", Toast.LENGTH_LONG).show()
+                        Log.i("TAG", "lat from map fragment =: ${latLng.latitude} ")
+                        Log.i("TAG", "lon from map fragment =: ${latLng.longitude} ")
 
-                }else{
-                    Toast.makeText(requireContext(),"Incorrect location",Toast.LENGTH_LONG).show()
-
+                    } else {
+                        Toast.makeText(requireContext(), "No address found for the provided location", Toast.LENGTH_LONG).show()
+                    }
                 }
+
             }
+
 
             snackbar.show()
             // Perform reverse geocoding to get the address from coordinates
