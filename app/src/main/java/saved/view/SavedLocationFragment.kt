@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.example.weatherapp.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
 import home.viewModel.HomeViewModel
 import home.viewModel.HomeViewModelFactory
 import kotlinx.coroutines.CoroutineScope
@@ -37,6 +39,7 @@ import saved.viewModel.SavedViewModelFactory
 class SavedLocationFragment : Fragment() {
 
     lateinit var animationView: LottieAnimationView
+    lateinit var starsAnimationView:LottieAnimationView
     lateinit var savedRecycle : RecyclerView
     lateinit var fabBtn : FloatingActionButton
     lateinit var search : EditText
@@ -44,6 +47,7 @@ class SavedLocationFragment : Fragment() {
     lateinit var savedViewModel: SavedViewModel
     lateinit var adapter  : SavedListAdapter
     lateinit var navController : NavController
+    lateinit var myNavigationView: NavigationView
     private val sharedFlow = MutableSharedFlow<List<Location>>()
 
 
@@ -68,22 +72,44 @@ class SavedLocationFragment : Fragment() {
         search=view.findViewById(R.id.savedSearchID)
         fabBtn=view.findViewById(R.id.fabMapBtn)
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-
+        myNavigationView = view.findViewById(R.id.navigationView3ID)
+        starsAnimationView=view.findViewById(R.id.starAnimationView3)
+        starsAnimationView.setAnimation(R.raw.stars)
+        starsAnimationView.playAnimation()
 
         fabBtn.setOnClickListener {
             val navController =
                 Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
             navController.navigate(R.id.myMapFragment)
         }
+        myNavigationView.setNavigationItemSelectedListener { menuItem ->
+            if (menuItem.itemId == R.id.nav_home) {
+                Toast.makeText(requireContext(),"home clicked ", Toast.LENGTH_LONG).show()
+                val navController =
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                navController.navigate(R.id.homeFragment)
+            }
+            if (menuItem.itemId == R.id.nav_search) {
+                val navController =
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                navController.navigate(R.id.myMapFragment)
+            }
+            if (menuItem.itemId == R.id.nav_setting) {
+                val navController =
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                navController.navigate(R.id.settingFragment)
+            }
+            false
+        }
 
         search.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                filteredStudents()
-                lifecycleScope.launch {
-                    sharedFlow.emit(s.toString())
-                }
+//                filteredStudents()
+//                lifecycleScope.launch {
+//                    sharedFlow.emit(s.toString())
+//                }
             }
 
 
@@ -106,27 +132,29 @@ class SavedLocationFragment : Fragment() {
         savedRecycle.adapter = adapter
         savedRecycle.layoutManager = layoutManager
 
-//        lifecycleScope.launch {
-//            savedViewModel.locationList.collect() {
-//                adapter.submitLocationsList(it)
-//            }
-//        }
+        lifecycleScope.launch {
+            savedViewModel.locationList.collect() {
+                adapter.submitLocationsList(it)
+            }
+        }
         animationView.setAnimation(R.raw.snow_anim)
         animationView.playAnimation()
 
-    }
-    private fun filteredStudents() {
-        val scope = CoroutineScope(Dispatchers.Main)
 
-        scope.launch {
-            sharedFlow.collect { filterText ->
-                val filteredList = withContext(Dispatchers.Default) {
-                    savedViewModel.locationList.filter { it.contains(filterText, ignoreCase = true) }
-                }
-                adapter?.submitLocationsList(filteredList)
-            }
-        }
+
     }
+//    private fun filteredStudents() {
+//        val scope = CoroutineScope(Dispatchers.Main)
+//
+//        scope.launch {
+//            sharedFlow.collect { filterText ->
+//                val filteredList = withContext(Dispatchers.Default) {
+//                    savedViewModel.locationList.filter { it.contains(filterText, ignoreCase = true) }
+//                }
+//                adapter?.submitLocationsList(filteredList)
+//            }
+//        }
+//    }
 
 
 

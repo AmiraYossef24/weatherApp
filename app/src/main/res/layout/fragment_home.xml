@@ -226,7 +226,7 @@
                                 android:layout_gravity="start"
                                 android:layout_weight="1"
                                 android:gravity="start"
-                                android:text="TextView"
+                                android:text="@string/today"
                                 android:textColor="@color/white" />
 
                             <TextView

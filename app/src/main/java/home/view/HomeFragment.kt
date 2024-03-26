@@ -42,9 +42,13 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.navigation.NavigationView
 import home.viewModel.HomeViewModel
 import home.viewModel.HomeViewModelFactory
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import model.WeatherRepository
 import network.weatherRemoteDataSource
+import setting.viewModel.SettingViewModel
+import setting.viewModel.SettingViewModelFactory
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -107,8 +111,8 @@ class HomeFragment : Fragment() {
     lateinit var drawer : DrawerLayout
     lateinit var myNavigationView : NavigationView
 
-    var lan : Double = 0.0
-    var lat : Double = 0.0
+    public var lan : Double = 0.0
+    public var lat : Double = 0.0
     lateinit  var des : String
     var max : Double =0.0
     var min : Double = 0.0
@@ -116,10 +120,23 @@ class HomeFragment : Fragment() {
     private val REQUEST_LOCATION_CODE = 1001 // Your request code
     private val API_KEY="af0b74520668db5033dea0b93e9a70c3"
     private val TAG="HomeFragment"
+    lateinit var settingFactory : SettingViewModelFactory
+    lateinit var settingViewModel : SettingViewModel
+    lateinit var newLang :String
+    lateinit var newTemp :String
+    lateinit var newLocation :String
+    lateinit var newWindSpeed:String
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        settingViewModel.emitChangingSetting()
 
     }
 
@@ -133,6 +150,8 @@ class HomeFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
         super.onViewCreated(view, savedInstanceState)
         text = view.findViewById(R.id.myTxView)
         degree=view.findViewById(R.id.degreeTxID)
@@ -191,6 +210,9 @@ class HomeFragment : Fragment() {
         starsAnimationView.playAnimation()
 
 
+        settingFactory = SettingViewModelFactory(requireActivity().application)
+        settingViewModel = ViewModelProvider(this, settingFactory).get(SettingViewModel::class.java)
+
         homeFactory = HomeViewModelFactory(
             WeatherRepository.getInstance(
                 weatherRemoteDataSource.getInstance(),
@@ -216,6 +238,14 @@ class HomeFragment : Fragment() {
             if (menuItem.itemId == R.id.nav_save) {
                 val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
                 navController.navigate(R.id.savedLocationFragment)
+            }
+            if (menuItem.itemId == R.id.nav_setting) {
+                val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
+                navController.navigate(R.id.settingFragment)
+            }
+            if (menuItem.itemId == R.id.nav_alert) {
+                val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
+                navController.navigate(R.id.alertFragment)
             }
             false
         }
@@ -248,6 +278,20 @@ class HomeFragment : Fragment() {
             }
 
         }
+////////////////////////////
+        lifecycleScope.launch {
+            settingViewModel.settingChanges.collectLatest{setting ->
+
+                newLang = setting.lang
+                newTemp = setting.tempe
+                newLocation = setting.loc
+                newWindSpeed= setting.wind
+
+                Log.i(TAG, "collectSettingsData from home: 1-$newLang , 2-$newTemp , 3-$newLocation , 4-$newWindSpeed ")
+
+            }
+        }
+
 
         lifecycleScope.launch {
             viewModel.fiveDays.observe(viewLifecycleOwner){
@@ -261,7 +305,6 @@ class HomeFragment : Fragment() {
                     air.text="${it[0].main.pressure} hPa"
                     sea.text="1015 m"
                     desc2.text=it[0].weather[0].description
-                    day1Name.text="Today"
                     day1Des.text=it[0].weather[0].description
                     val iconDrawable = ContextCompat.getDrawable(requireContext(), setIcon(it[0].weather[0].icon))
                     day1Des.setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, null, null)
@@ -317,6 +360,8 @@ class HomeFragment : Fragment() {
 
 
 
+
+
     fun updateBackgroundAnimation(weatherCondition: String ) {
 //        val animationResId = when (weatherCondition) {
 //            "clear sky" -> R.raw.snowy_anim
@@ -360,9 +405,11 @@ class HomeFragment : Fragment() {
                     if (location != null) {
                         lan=location.longitude
                         lat=location.latitude
-                        viewModel.getCurrentWeather(lan,lat,API_KEY)
-                        viewModel.getWeatherDetails(lan,lat,API_KEY)
-                        viewModel.getFiveDays(lan,lat, API_KEY)
+                        viewModel.getCurrentWeather(lat,lan ,API_KEY,newTemp,newLang)
+                        viewModel.getWeatherDetails(lat,lan ,API_KEY,newTemp,newLang)
+                        viewModel.getFiveDays(lat,lan ,API_KEY,newTemp,newLang)
+                        ///
+
 
                     }
                     Log.i("TAG", "lang = : "+ location?.longitude.toString())

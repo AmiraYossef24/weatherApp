@@ -22,5 +22,20 @@
     <string name="search_here">Search here</string>
     <string name="map">Map</string>
     <string name="save_Location">Do you want to save Location ?</string>
+    <string name="arabic">Arabic</string>
+    <string name="english">English</string>
+    <string name="lan">Language</string>
+    <string name="cel">Celsius</string>
+    <string name="kel">Kelvin</string>
+    <string name="far">Fahrenheit</string>
+    <string name="temp">Temperature</string>
+    <string name="loc">Location</string>
+    <string name="gps">GPS</string>
+    <string name="windSpeed">Wind Speed</string>
+    <string name="meter">Meter / Sec</string>
+    <string name="mile">Mile / Hour</string>
+    <string name="setting">Setting</string>
+    <string name="today">Today</string>
+
 
 </resources>

@@ -42,10 +42,10 @@ class SavedViewModel (private  val _irepo : IWeatherRepository) : ViewModel() {
         }
     }
 
-    fun getCurrentWeather(lan : Double, lat : Double, apiKey :String){
+    fun getCurrentWeather(lat : Double,lan : Double,  apiKey :String, temp :String, lang :String){
         viewModelScope.launch{
 
-            _weather.postValue(_irepo.getCurrentWeather(lan , lat , apiKey))
+            _weather.postValue(_irepo.getCurrentWeather(lat,lan,apiKey,temp,lang))
         }
     }
 

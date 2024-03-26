@@ -5,6 +5,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.flow.Flow
+import network.RetrofitHelper
 import network.weatherRemoteDataSource
 import retrofit2.Response
 import java.time.LocalDate
@@ -37,8 +38,8 @@ class WeatherRepository private constructor(
 
     }
 
-    override suspend fun getCurrentWeather(lan : Double, lat : Double, apiKey :String ): WeatherResponse? {
-        val response = _weatherRemoteDataSource.getWeatherOverNetwork(lan, lat,apiKey)
+    override suspend fun getCurrentWeather( lat : Double,lan : Double , apiKey :String, temp : String , lang : String  ): WeatherResponse? {
+        val response = _weatherRemoteDataSource.getWeatherOverNetwork( lat,lan,apiKey,temp,lang)
         return if (response.isSuccessful) {
             // Return the response body
             Log.i(
@@ -53,8 +54,8 @@ class WeatherRepository private constructor(
     }
 
 
-    override suspend fun getWeatherDetails(lan : Double, lat : Double, apiKey :String ): DetailsResponse? {
-        val response = _weatherRemoteDataSource.getDetailsOverNetwork(lan, lat,apiKey)
+    override suspend fun getWeatherDetails( lat : Double, lan : Double, apiKey :String , temp : String, lang :String ): DetailsResponse? {
+        val response = _weatherRemoteDataSource.getDetailsOverNetwork(lat, lan,apiKey , temp ,lang)
         return if (response.isSuccessful) {
             Log.i(
                 "TAG",
@@ -68,11 +69,10 @@ class WeatherRepository private constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun getWeatherForecast(lan: Double, lat: Double, apiKey: String): List<WeatherData> {
-        val response = _weatherRemoteDataSource.getDetailsOverNetwork(lan, lat, apiKey)
+    override suspend fun getWeatherForecast( lat: Double, lan: Double, apiKey: String , temp :String, lang:String): List<WeatherData> {
+        val response = _weatherRemoteDataSource.getDetailsOverNetwork( lat,lan, apiKey,temp,lang)
         return response.body()?.let { filterTemperaturesPerDay(it) } ?: emptyList()
     }
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun filterTemperaturesPerDay(response: DetailsResponse): List<WeatherData> {
@@ -107,6 +107,22 @@ class WeatherRepository private constructor(
     override suspend fun deleteLocation(location: Location){
         _weatherLocalDataSource.deleteLocation(location)
     }
+
+    override suspend fun getAllSavedCalender() : Flow<List<Calender>>{
+        var res=_weatherLocalDataSource.getAllCalender()
+        return res
+    }
+
+    override suspend fun insertCalender(calender: Calender){
+        _weatherLocalDataSource.insertCalender(calender)
+    }
+
+    override suspend fun deleteCalender(calender: Calender){
+        _weatherLocalDataSource.deleteCalender(calender)
+    }
+
+
+
 
 
 }

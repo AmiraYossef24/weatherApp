@@ -33,9 +33,12 @@ import com.google.android.material.navigation.NavigationView
 import home.view.HomeListAdapter
 import home.viewModel.HomeViewModel
 import home.viewModel.HomeViewModelFactory
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import model.WeatherRepository
 import network.weatherRemoteDataSource
+import setting.viewModel.SettingViewModel
+import setting.viewModel.SettingViewModelFactory
 import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -106,11 +109,21 @@ class CountryDetailsFragment : Fragment() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val API_KEY="af0b74520668db5033dea0b93e9a70c3"
     private val TAG="CountryDetailsFragment"
+    lateinit var settingFactory : SettingViewModelFactory
+    lateinit var settingViewModel : SettingViewModel
+    private var newLang :String =""
+    private var newTemp :String=""
+    lateinit var newLocation :String
+    lateinit var newWindSpeed:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+    }
 
+    override fun onStart() {
+        super.onStart()
+        settingViewModel.emitChangingSetting()
 
     }
 
@@ -183,16 +196,8 @@ class CountryDetailsFragment : Fragment() {
         starsAnimationView.playAnimation()
         weatherAnimationView.setAnimation(R.raw.snow_anim)
         weatherAnimationView.playAnimation()
-
-        var lat= arguments?.let { CountryDetailsFragmentArgs.fromBundle(it).lat }
-        Log.i(TAG, "lat from countryDetails = : ${lat}")
-        var lon= arguments?.let { CountryDetailsFragmentArgs.fromBundle(it).lon }
-        Log.i(TAG, "lon from countryDetails = : ${lon}")
-        var nameStr= arguments?.let { CountryDetailsFragmentArgs.fromBundle(it).countryName }
-
-
-
-
+        settingFactory = SettingViewModelFactory(requireActivity().application)
+        settingViewModel = ViewModelProvider(this, settingFactory).get(SettingViewModel::class.java)
 
         homeFactory = HomeViewModelFactory(
             WeatherRepository.getInstance(
@@ -201,33 +206,59 @@ class CountryDetailsFragment : Fragment() {
             )
 
         )
-
         viewModel = ViewModelProvider(this, homeFactory).get(HomeViewModel::class.java)
+
+
         var countryName = arguments?.let { CountryDetailsFragmentArgs.fromBundle(it).countryName }
+        Log.i(TAG, "country name fron countryDetails = : ${countryName}")
+        var lat= arguments?.let { CountryDetailsFragmentArgs.fromBundle(it).lat }
+        Log.i(TAG, "lat from countryDetails = : ${lat}")
+        var lon= arguments?.let { CountryDetailsFragmentArgs.fromBundle(it).lon }
+        Log.i(TAG, "lon from countryDetails = : ${lon}")
+        var nameStr= arguments?.let { CountryDetailsFragmentArgs.fromBundle(it).countryName }
+
+
+
+        lifecycleScope.launch {
+            Log.i(TAG, "inside setting scope : ")
+            settingViewModel.settingChanges.collectLatest { setting ->
+                Log.i(TAG, "inside setting scope lone 221: ")
+
+                newLang = setting.lang
+                newTemp = setting.tempe
+                Log.i(TAG, "newTemp = : ${newTemp}")
+                newLocation = setting.loc
+                newWindSpeed = setting.wind
+
+                Log.i(
+                    TAG,
+                    "collectSettingsData: 1-$newLang , 2-$newTemp , 3-$newLocation , 4-$newWindSpeed "
+                )
+            }
+        }
+
         Log.i(TAG, "cuntry name from details = : ${countryName}")
         if (countryName != null) {
+            Log.i(TAG, "after line 231: ")
             getLocationFromAddress(requireContext(),countryName)?.let {
                 getLocationFromAddress(requireContext(),countryName)?.let { it1 ->
                     viewModel.getCurrentWeather(
                         it.first,
-                        it1
-                            .second,API_KEY)
+                        it1.second,API_KEY,newTemp,newLang)
 
                     viewModel.getWeatherDetails(
                         it.first,
-                        it1
-                            .second,API_KEY)
+                        it1.second,API_KEY,newTemp,newLang)
 
                     viewModel.getFiveDays(
                         it.first,
-                        it1
-                            .second,API_KEY)
+                        it1.second,API_KEY,newTemp,newLang)
 
                 }
             }
+        }else{
+            Log.i(TAG, "countryname = : ${countryName}")
         }
-
-
         menu_icon.setOnClickListener {
             if (drawer.isDrawerOpen(GravityCompat.END)) {
                 drawer.closeDrawer(GravityCompat.END)
@@ -334,6 +365,9 @@ class CountryDetailsFragment : Fragment() {
 
             }
         }
+
+
+
 
     }
     fun convertToCelsiusString(tempMin: Double, tempMax: Double): String {

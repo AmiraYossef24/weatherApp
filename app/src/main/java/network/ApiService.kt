@@ -18,15 +18,23 @@ interface ApiService {
     suspend fun getWeatherData(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
-        @Query("appid") apiKey: String
+        @Query("appid") apiKey: String,
+        @Query("units") temperature: String,
+        @Query("lang") language: String,
+
+
     ): Response<WeatherResponse>
 
     @GET("forecast")
     suspend fun getAllDetails(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
-        @Query("appid") apiKey: String
+        @Query("appid") apiKey: String,
+        @Query("units") temperature: String,
+        @Query("lang") language: String,
     ): Response<DetailsResponse>
+
+
 }
 
     object RetrofitHelper {

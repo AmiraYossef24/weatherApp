@@ -24,21 +24,21 @@ class HomeViewModel (private  val _irepo : IWeatherRepository) : ViewModel() {
     private var _fiveDays : MutableLiveData<List<WeatherData>> = MutableLiveData<List<WeatherData>>()
     val fiveDays : LiveData<List<WeatherData>> = _fiveDays
 
-    fun getCurrentWeather(lan : Double, lat : Double, apiKey :String){
+    fun getCurrentWeather( lat : Double, lan : Double, apiKey :String ,  temp : String , lang : String  ){
         viewModelScope.launch{
 
-            _weather.postValue(_irepo.getCurrentWeather(lan , lat , apiKey))
+            _weather.postValue(_irepo.getCurrentWeather(lat,lan,apiKey,temp,lang))
         }
     }
-    fun getWeatherDetails(lan : Double, lat : Double, apiKey :String){
+    fun getWeatherDetails(lat : Double, lan : Double, apiKey :String ,  temp : String , lang : String  ){
         viewModelScope.launch {
-            _details.postValue(_irepo.getWeatherDetails(lan,lat,apiKey))
+            _details.postValue(_irepo.getWeatherDetails(lat,lan,apiKey,temp,lang))
         }
     }
 
-    fun getFiveDays(lan : Double, lat : Double, apiKey :String){
+    fun getFiveDays(lat : Double, lan : Double, apiKey :String ,  temp : String , lang : String  ){
         viewModelScope.launch {
-            _fiveDays.postValue(_irepo.getWeatherForecast(lan,lat,apiKey))
+            _fiveDays.postValue(_irepo.getWeatherForecast(lat,lan,apiKey,temp,lang))
         }
     }
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardItemID"
     android:layout_width="match_parent"
     android:layout_height="100dp"
@@ -32,6 +33,15 @@
             android:layout_marginTop="8dp"
             android:src="@drawable/cancel"
             />
+
+<!--        <ImageView-->
+<!--            android:id="@+id/alertIcon"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="start"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:src="@drawable/notificationoff" />-->
 
         <TextView
             android:id="@+id/cuntryNameTxID"

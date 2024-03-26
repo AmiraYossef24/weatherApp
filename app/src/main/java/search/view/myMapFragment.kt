@@ -84,8 +84,6 @@ class myMapFragment : Fragment() ,OnMapReadyCallback {
         starsAnimationView=view.findViewById(R.id.starAnimationView2)
         starsAnimationView.setAnimation(R.raw.stars)
         starsAnimationView.playAnimation()
-
-
         myNavigationView = view.findViewById(R.id.navigationView2ID)
         locationFactory= MapFragmentViewModelFactory(
             WeatherRepository.getInstance(
@@ -152,7 +150,7 @@ class myMapFragment : Fragment() ,OnMapReadyCallback {
         gMap.setOnMapClickListener { latLng ->
             addMarker(latLng)
             val rootView = requireView()
-            val snackbar = Snackbar.make(rootView, "Do you to save this Location ?", Snackbar.LENGTH_INDEFINITE)
+            val snackbar = Snackbar.make(rootView, "Do you want to save this Location ?", Snackbar.LENGTH_SHORT)
                 .setActionTextColor(Color.WHITE)
                 .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.blue))
 

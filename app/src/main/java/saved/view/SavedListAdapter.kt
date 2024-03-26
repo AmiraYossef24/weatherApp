@@ -3,6 +3,7 @@ package saved.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.provider.CallLog
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -32,12 +33,16 @@ class SavedListAdapter(
     private lateinit var productsList : List<Location>
 
 
-    fun submitLocationsList(locationsFlow: Flow<List<Location>>) {
-        lifecycleOwner.lifecycleScope.launch { // Use lifecycleOwner to access lifecycleScope
-            locationsFlow.collect { locations ->
-                submitList(locations)
-            }
-        }
+
+
+    fun submitLocationsList(locations: List<Location>) {
+
+        submitList(locations)
+//        lifecycleOwner.lifecycleScope.launch { // Use lifecycleOwner to access lifecycleScope
+//            locationsFlow.collect { locations ->
+//                submitList(locations)
+//            }
+//        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
