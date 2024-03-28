@@ -231,24 +231,29 @@ class HomeFragment : Fragment() {
             }
         }
         myNavigationView.setNavigationItemSelectedListener { menuItem ->
-            if (menuItem.itemId == R.id.nav_search) {
-                val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
-                navController.navigate(R.id.myMapFragment)
+            val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
+            when (menuItem.itemId) {
+                R.id.nav_search -> {
+                    navController.navigate(R.id.myMapFragment)
+                }
+                R.id.nav_save -> {
+                    navController.navigate(R.id.savedLocationFragment)
+                }
+                R.id.nav_setting -> {
+                    navController.navigate(R.id.settingFragment)
+                }
+                R.id.nav_alert -> {
+                    navController.navigate(R.id.alertFragment)
+                }
             }
-            if (menuItem.itemId == R.id.nav_save) {
-                val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
-                navController.navigate(R.id.savedLocationFragment)
-            }
-            if (menuItem.itemId == R.id.nav_setting) {
-                val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
-                navController.navigate(R.id.settingFragment)
-            }
-            if (menuItem.itemId == R.id.nav_alert) {
-                val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
-                navController.navigate(R.id.alertFragment)
-            }
-            false
+
+            // Close the Navigation Drawer
+            val drawerLayout: DrawerLayout = requireActivity().findViewById(R.id.drawerLayoutID)
+            drawerLayout.closeDrawer(GravityCompat.END)
+
+            true // Return true to indicate that the item click is handled
         }
+
 
         viewModel.weather.observe(viewLifecycleOwner) { current_weather ->
             min=current_weather.main.temp_min
@@ -278,7 +283,7 @@ class HomeFragment : Fragment() {
             }
 
         }
-////////////////////////////
+
         lifecycleScope.launch {
             settingViewModel.settingChanges.collectLatest{setting ->
 
@@ -358,10 +363,6 @@ class HomeFragment : Fragment() {
 
     }
 
-
-
-
-
     fun updateBackgroundAnimation(weatherCondition: String ) {
 //        val animationResId = when (weatherCondition) {
 //            "clear sky" -> R.raw.snowy_anim
@@ -370,8 +371,6 @@ class HomeFragment : Fragment() {
         weatherAnimationView.setAnimation(R.raw.snow_anim)
         weatherAnimationView.playAnimation()
     }
-
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

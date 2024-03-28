@@ -36,6 +36,7 @@
     <string name="mile">Mile / Hour</string>
     <string name="setting">Setting</string>
     <string name="today">Today</string>
+    <string name="cancel_action_label">Cancel</string>
 
 
 </resources>

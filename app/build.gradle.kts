@@ -53,6 +53,9 @@ dependencies {
     //navigation
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation("com.google.android.gms:play-services-tflite-support:16.1.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -87,6 +90,10 @@ dependencies {
 
     // Google Play Services
     implementation ("com.google.android.gms:play-services-maps:18.1.0")
+
+    //workManager
+
+    implementation ("androidx.work:work-runtime-ktx:2.7.1")
 
 
 }

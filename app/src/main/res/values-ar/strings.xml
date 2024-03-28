@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">الطقس</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="weather_details">تفاصيل المناخ</string>
+    <string name="feel_like">تشعر ب</string>
+    <string name="nne_wind">الرياح</string>
+    <string name="humidity">الرطوبه</string>
+    <string name="uv">الاشعه الفوق بنفسجيه</string>
+    <string name="visibility">الرؤيه</string>
+    <string name="air_pressure">ضغط الهواء</string>
+    <string name="weather_forecast">توقعات الطقس لمدة 15 يوما</string>
+    <string name="sea">مستوح سطح البحر</string>
+    <string name="desc">الوصف</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="search">بحث</string>
+    <string name="favourite">المفضله</string>
+    <string name="alert">الاشعارات</string>
+    <string name="home">الرئيسيه</string>
+    <string name="saved">حفظ</string>
+    <string name="search_here">إبحث هنا </string>
+    <string name="map">الخريطه</string>
+    <string name="save_Location">هل تريد حفظ الموقع؟</string>
+    <string name="arabic">العربيه</string>
+    <string name="english">الإنجيليزيه</string>
+    <string name="lan">اللغه</string>
+    <string name="cel">درجة مئوية</string>
+    <string name="kel">كلفن</string>
+    <string name="far">فهرنهايت</string>
+    <string name="temp">درجه الحراره</string>
+    <string name="loc">الموقع</string>
+    <string name="gps">نظام تحديد المواقع</string>
+    <string name="windSpeed">سرعه الرياح</string>
+    <string name="meter">متر / الثانيه</string>
+    <string name="mile">ميل / الساعه</string>
+    <string name="setting">الإعدادات</string>
+    <string name="today">اليوم</string>
+    <string name="cancel_action_label">Cancel</string>
+
+</resources>

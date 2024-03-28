@@ -87,6 +87,9 @@
         <action
             android:id="@+id/action_settingFragment_to_alertFragment"
             app:destination="@id/alertFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_mapFragmentThree"
+            app:destination="@id/mapFragmentThree" />
     </fragment>
     <fragment
         android:id="@+id/alertFragment"
@@ -104,4 +107,8 @@
         android:id="@+id/myMapFragmentTwo"
         android:name="alert.view.MyMapFragmentTwo"
         android:label="MyMapFragmentTwo" />
+    <fragment
+        android:id="@+id/mapFragmentThree"
+        android:name="setting.view.MapFragmentThree"
+        android:label="MapFragmentThree" />
 </navigation>
