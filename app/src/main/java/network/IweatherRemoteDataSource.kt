@@ -1,5 +1,6 @@
 package network
 
+import kotlinx.coroutines.flow.StateFlow
 import model.DetailsResponse
 import model.SettingsManager
 import model.WeatherData

@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import model.DetailsResponse
 import model.IWeatherRepository
@@ -13,6 +15,7 @@ import model.Location
 import model.WeatherData
 import model.WeatherResponse
 import retrofit2.Response
+import utility.ApiState
 
 class HomeViewModel (private  val _irepo : IWeatherRepository) : ViewModel() {
     private var _weather : MutableLiveData<WeatherResponse> = MutableLiveData<WeatherResponse>()
@@ -26,7 +29,6 @@ class HomeViewModel (private  val _irepo : IWeatherRepository) : ViewModel() {
 
     fun getCurrentWeather( lat : Double, lan : Double, apiKey :String ,  temp : String , lang : String  ){
         viewModelScope.launch{
-
             _weather.postValue(_irepo.getCurrentWeather(lat,lan,apiKey,temp,lang))
         }
     }

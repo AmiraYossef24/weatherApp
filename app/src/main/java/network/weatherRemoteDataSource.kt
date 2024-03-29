@@ -3,6 +3,8 @@ package network
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import model.DetailsResponse
 import model.SettingsManager
 import model.WeatherData
@@ -32,13 +34,14 @@ class weatherRemoteDataSource private constructor() : IweatherRemoteDataSource {
     }
 
     override suspend fun getWeatherOverNetwork( lat : Double, lan : Double,  apiKey :String, temp : String , lang : String) : Response<WeatherResponse> {
+
         val response = weatherService.getWeatherData(lat, lan,apiKey,temp,lang)
         if(response.isSuccessful){
             Response.success(response.body()) // Wrap the response body in Response.success()
             Log.i("TAG", "getAllProducts Repository: The Products = ${response.toString()}")
         }
         else{
-            Log.i("TAG", response.errorBody().toString())
+            Log.i("TAG", "error")
         }
         return response
     }

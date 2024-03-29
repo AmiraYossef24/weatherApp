@@ -2,6 +2,8 @@ package model
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import kotlinx.coroutines.flow.StateFlow
+import retrofit2.Response
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -22,7 +24,7 @@ data class WeatherResponse(
     val id: Int,
     val name: String,
     val cod: Int
-){
+)  {
     fun getTemperatureInCelsius(): String {
         val temperatureCelsius = main.temp - 273.15
         return String.format("%.1f°C", temperatureCelsius)

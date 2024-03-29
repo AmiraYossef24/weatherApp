@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/splashFragment2">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -111,4 +111,13 @@
         android:id="@+id/mapFragmentThree"
         android:name="setting.view.MapFragmentThree"
         android:label="MapFragmentThree" />
+    <fragment
+        android:id="@+id/splashFragment2"
+        android:name="splashscreen.view.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment2_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>

@@ -1,6 +1,7 @@
 package model
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import retrofit2.Response
 
 interface IWeatherRepository {
