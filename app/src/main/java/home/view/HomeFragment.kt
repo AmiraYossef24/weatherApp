@@ -40,9 +40,9 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.navigation.NavigationView
+import countrydetails.view.CountryDetailsFragmentArgs
 import home.viewModel.HomeViewModel
 import home.viewModel.HomeViewModelFactory
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import model.WeatherRepository
@@ -153,6 +153,11 @@ class HomeFragment : Fragment() {
 
 
         super.onViewCreated(view, savedInstanceState)
+
+
+
+
+
         text = view.findViewById(R.id.myTxView)
         degree=view.findViewById(R.id.degreeTxID)
         date=view.findViewById(R.id.dateTxId)
@@ -253,6 +258,7 @@ class HomeFragment : Fragment() {
 
             true // Return true to indicate that the item click is handled
         }
+
 
 
         viewModel.weather.observe(viewLifecycleOwner) { current_weather ->
@@ -404,10 +410,34 @@ class HomeFragment : Fragment() {
                     if (location != null) {
                         lan=location.longitude
                         lat=location.latitude
-                        viewModel.getCurrentWeather(lat,lan ,API_KEY,newTemp,newLang)
-                        viewModel.getWeatherDetails(lat,lan ,API_KEY,newTemp,newLang)
-                        viewModel.getFiveDays(lat,lan ,API_KEY,newTemp,newLang)
-                        ///
+
+
+                        if(arguments!=null){
+                            var option =arguments?.let { HomeFragmentArgs.fromBundle(it).option }
+                            if(option.equals("Map")){
+                                var lati =arguments?.let { HomeFragmentArgs.fromBundle(it).latitute?.toDouble() }
+                                var longi =arguments?.let { HomeFragmentArgs.fromBundle(it).langitude?.toDouble()}
+
+                                lati?.let { longi?.let { it1 ->
+                                    viewModel.getCurrentWeather(it,
+                                        it1,API_KEY,newTemp,newLang)
+                                } }
+
+                                lati?.let { longi?.let { it1 ->
+                                    viewModel.getWeatherDetails(it,
+                                        it1,API_KEY,newTemp,newLang)
+                                } }
+
+                                lati?.let { longi?.let { it1 ->
+                                    viewModel.getFiveDays(it,
+                                        it1,API_KEY,newTemp,newLang)
+                                } }
+                            }else if(option.equals("GPS")){
+                                viewModel.getCurrentWeather(lat,lan ,API_KEY,newTemp,newLang)
+                                viewModel.getWeatherDetails(lat,lan ,API_KEY,newTemp,newLang)
+                                viewModel.getFiveDays(lat,lan ,API_KEY,newTemp,newLang)
+                            }
+                        }
 
 
                     }

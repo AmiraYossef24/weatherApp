@@ -37,6 +37,7 @@
     <string name="setting">Setting</string>
     <string name="today">Today</string>
     <string name="cancel_action_label">Cancel</string>
+    <string name="welcome_msg">Welcome</string>
 
 
 </resources>

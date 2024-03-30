@@ -21,6 +21,20 @@
         <action
             android:id="@+id/action_homeFragment_to_alertFragment"
             app:destination="@id/alertFragment" />
+        <argument android:name="countryName"
+            android:defaultValue="string"
+            app:nullable="true"/>
+        <argument
+            android:name="latitute"
+            app:argType="string"
+            app:nullable="true"/>
+        <argument
+            android:name="langitude"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="option"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/myMapFragment"
@@ -110,14 +124,27 @@
     <fragment
         android:id="@+id/mapFragmentThree"
         android:name="setting.view.MapFragmentThree"
-        android:label="MapFragmentThree" />
+        android:label="MapFragmentThree" >
+        <action
+            android:id="@+id/action_mapFragmentThree_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/splashFragment2"
         android:name="splashscreen.view.SplashFragment"
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash" >
         <action
-            android:id="@+id/action_splashFragment2_to_homeFragment"
+            android:id="@+id/action_splashFragment2_to_initialFragment"
+            app:destination="@id/initialFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/initialFragment"
+        android:name="splashscreen.view.InitialFragment"
+        android:label="fragment_initial"
+        tools:layout="@layout/fragment_initial" >
+        <action
+            android:id="@+id/action_initialFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

@@ -28,6 +28,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -52,6 +53,7 @@ import model.Location
 import model.NotificationWorker
 import model.WeatherRepository
 import network.weatherRemoteDataSource
+import search.view.myMapFragmentDirections
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -209,9 +211,16 @@ class MapFragmentThree : Fragment() , OnMapReadyCallback {
                         val location = Location(locationName, latLng.latitude, latLng.longitude)
                         homeViewModel.getCurrentWeather(latLng.latitude,latLng.longitude,API_KEY,"metric","en")
 
-//                        homeViewModel.weather.observe(viewLifecycleOwner){
-//                            des= it.weather[0].description
-//                        }
+                        val action = MapFragmentThreeDirections.actionMapFragmentThreeToHomeFragment(
+                            latLng.latitude.toString(),
+                            latLng.longitude.toString(),
+                            "Map",
+                            locationName
+                        )
+                        view?.findNavController()?.navigate(action)
+                        Log.i("TAG", "lat from map3= : ${latLng.latitude} ")
+                        Log.i("TAG", "lon from map3 = : ${latLng.longitude} ")
+                        Log.i("TAG", "cuntry name from map3 = : ${locationName}")
 
                         Toast.makeText(requireContext(), "Inserted $locationName", Toast.LENGTH_SHORT).show()
                         Log.i("TAG", "lat from map fragment =: ${latLng.latitude} ")

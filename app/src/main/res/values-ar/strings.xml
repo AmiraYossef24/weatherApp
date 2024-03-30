@@ -38,5 +38,6 @@
     <string name="setting">الإعدادات</string>
     <string name="today">اليوم</string>
     <string name="cancel_action_label">Cancel</string>
+    <string name="welcome_msg">Welcome to \nSky Watch</string>
 
 </resources>

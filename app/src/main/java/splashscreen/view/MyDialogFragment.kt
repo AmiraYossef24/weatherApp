@@ -1,4 +1,4 @@
-package alert.view
+package splashscreen.view
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.airbnb.lottie.LottieAnimationView
 import com.example.weatherapp.R
 
@@ -39,13 +41,17 @@ class MyDialogFragment : DialogFragment() {
             requireActivity()
         )
         builder.setView(requireActivity().layoutInflater.inflate(R.layout.dialog_fragment_layout, null))
-            .setPositiveButton("Save", DialogInterface.OnClickListener { dialog, id ->
+            .setTitle("How do you want to locate yourself?")
+            .setPositiveButton("GPS", DialogInterface.OnClickListener { dialog, id ->
 
-
+                val action = InitialFragmentDirections.actionInitialFragmentToHomeFragment("","","GPS")
+                parentFragment?.findNavController()?.navigate(action)
             })
-            .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, id ->
+            .setNegativeButton("Map", DialogInterface.OnClickListener { dialog, id ->
 
-                dialog.dismiss()
+                val navController =
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                navController.navigate(R.id.mapFragmentThree)
             })
         return builder.create()
     }

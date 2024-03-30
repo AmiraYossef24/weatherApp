@@ -5,7 +5,8 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.view.animation.AnimationUtils
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
@@ -14,8 +15,9 @@ import com.example.weatherapp.R
 class SplashFragment : Fragment() {
 
     private val SPLASH_DELAY_MS: Long = 5000
-    lateinit var welAnim  : LottieAnimationView
     lateinit var loadingAnim  :LottieAnimationView
+    lateinit var welTx : TextView
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +25,7 @@ class SplashFragment : Fragment() {
         Handler().postDelayed({
             val navController =
                 Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-            navController.navigate(R.id.homeFragment)
+            navController.navigate(R.id.initialFragment)
         }, SPLASH_DELAY_MS)
     }
 
@@ -37,13 +39,15 @@ class SplashFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        welAnim=view.findViewById(R.id.start)
+        welTx=view.findViewById(R.id.welcomeTXID)
         loadingAnim=view.findViewById(R.id.loading)
-
-        welAnim.setAnimation(R.raw.startanim)
         loadingAnim.setAnimation(R.raw.loading)
-        welAnim.playAnimation()
         loadingAnim.playAnimation()
+
+        val anim = AnimationUtils.loadAnimation(context, R.anim.fade_out)
+        welTx.startAnimation(anim)
+
+
 
 
     }
