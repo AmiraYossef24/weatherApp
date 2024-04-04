@@ -106,7 +106,6 @@ class myMapFragment : Fragment() ,OnMapReadyCallback {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 lifecycleScope.launch {
-                    // Check if the text input is empty or doesn't refer to a valid country name
                     if (!s.isNullOrBlank()) {
                         goToLocation(s.toString())
                     } else {
@@ -190,7 +189,6 @@ class myMapFragment : Fragment() ,OnMapReadyCallback {
 
 
             snackbar.show()
-            // Perform reverse geocoding to get the address from coordinates
 
         }
     }

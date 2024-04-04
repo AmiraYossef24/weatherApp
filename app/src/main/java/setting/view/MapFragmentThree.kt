@@ -222,7 +222,7 @@ class MapFragmentThree : Fragment() , OnMapReadyCallback {
                         Log.i("TAG", "lon from map3 = : ${latLng.longitude} ")
                         Log.i("TAG", "cuntry name from map3 = : ${locationName}")
 
-                        Toast.makeText(requireContext(), "Inserted $locationName", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Location updated ", Toast.LENGTH_SHORT).show()
                         Log.i("TAG", "lat from map fragment =: ${latLng.latitude} ")
                         Log.i("TAG", "lon from map fragment =: ${latLng.longitude} ")
 
@@ -235,7 +235,6 @@ class MapFragmentThree : Fragment() , OnMapReadyCallback {
 
 
             snackbar.show()
-            // Perform reverse geocoding to get the address from coordinates
 
         }
     }

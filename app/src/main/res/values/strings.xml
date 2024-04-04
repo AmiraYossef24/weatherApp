@@ -38,6 +38,7 @@
     <string name="today">Today</string>
     <string name="cancel_action_label">Cancel</string>
     <string name="welcome_msg">Welcome</string>
+    <string name="savedl">Saved Locations</string>
 
 
 </resources>

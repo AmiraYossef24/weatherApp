@@ -105,10 +105,13 @@ dependencies {
 
     // AndroidX Test - JVM testing
     testImplementation ("androidx.test:core-ktx:1.4.0")
+
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
+
     //testImplementation "androidx.test.ext:junit:$androidXTestExtKotlinRunnerVersion"
 
     // AndroidX Test - Instrumented testing
-    androidTestImplementation ("androidx.test.:1.1.3")
+    androidTestImplementation ("androidx.test:core:1.1.3")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.4.0")
 
     //Timber

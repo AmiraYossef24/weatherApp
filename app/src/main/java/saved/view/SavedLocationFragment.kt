@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -42,7 +43,7 @@ class SavedLocationFragment : Fragment() {
     lateinit var starsAnimationView:LottieAnimationView
     lateinit var savedRecycle : RecyclerView
     lateinit var fabBtn : FloatingActionButton
-    lateinit var search : EditText
+    lateinit var search : TextView
     lateinit var savedViewModelFactory: SavedViewModelFactory
     lateinit var savedViewModel: SavedViewModel
     lateinit var adapter  : SavedListAdapter
@@ -102,20 +103,6 @@ class SavedLocationFragment : Fragment() {
             false
         }
 
-        search.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                filteredStudents()
-//                lifecycleScope.launch {
-//                    sharedFlow.emit(s.toString())
-//                }
-            }
-
-
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
 
 
         savedViewModelFactory = SavedViewModelFactory(

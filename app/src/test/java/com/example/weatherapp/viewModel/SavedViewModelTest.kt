@@ -6,7 +6,7 @@ import org.junit.Test
 class SavedViewModelTest{
 
     @Test
-    fun am(){
+    fun add(){
 
     }
 

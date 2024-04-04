@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.airbnb.lottie.LottieAnimationView
 import com.example.weatherapp.R
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -33,6 +34,7 @@ import saved.viewModel.SavedViewModelFactory
 import setting.viewModel.SettingViewModel
 import setting.viewModel.SettingViewModelFactory
 import home.view.HomeFragment
+import splashscreen.view.InitialFragmentDirections
 import java.util.Locale
 
 class SettingFragment : Fragment() {
@@ -42,6 +44,7 @@ class SettingFragment : Fragment() {
     lateinit var kelvin: RadioButton
     lateinit var cel: RadioButton
     lateinit var far: RadioButton
+    lateinit var gps : RadioButton
     lateinit var map : RadioButton
     lateinit var settingViewModel: SettingViewModel
     lateinit var settingFactory: SettingViewModelFactory
@@ -86,6 +89,7 @@ class SettingFragment : Fragment() {
     cel=view.findViewById(R.id.cel_radio_id)
     far=view.findViewById(R.id.far_radio_id)
     map=view.findViewById(R.id.map_radio_id)
+    gps=view.findViewById(R.id.gps_radio_id)
     settingFactory = SettingViewModelFactory(requireActivity().application)
     settingViewModel = ViewModelProvider(this, settingFactory).get(SettingViewModel::class.java)
 
@@ -128,6 +132,11 @@ class SettingFragment : Fragment() {
             navController.navigate(R.id.mapFragmentThree)
 
         }
+
+    gps.setOnClickListener {
+        val action = SettingFragmentDirections.actionSettingFragmentToHomeFragment("","","GPS")
+        findNavController().navigate(action)
+    }
 
         myNavigationView.setNavigationItemSelectedListener { menuItem ->
             if (menuItem.itemId == R.id.nav_home) {

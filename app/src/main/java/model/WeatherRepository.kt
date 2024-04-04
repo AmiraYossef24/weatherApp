@@ -1,11 +1,13 @@
 package model
 
+import AppDB.IWeatherLocalDataSource
 import AppDB.WeatherLocalDataSource
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import network.IweatherRemoteDataSource
 import network.RetrofitHelper
 import network.weatherRemoteDataSource
 import retrofit2.Response
@@ -16,10 +18,10 @@ import java.time.format.DateTimeFormatter
 
 class WeatherRepository private constructor(
 
-    private var _weatherRemoteDataSource: weatherRemoteDataSource,
-    private var _weatherLocalDataSource: WeatherLocalDataSource,
+    private var _weatherRemoteDataSource: IweatherRemoteDataSource,
+    private var _weatherLocalDataSource: IWeatherLocalDataSource,
 
-)
+    )
 
 
     : IWeatherRepository {
@@ -29,8 +31,8 @@ class WeatherRepository private constructor(
         @Volatile
         private var instance: WeatherRepository? = null
         fun getInstance(
-            remoteDataSource: weatherRemoteDataSource,
-            localDataSource: WeatherLocalDataSource
+            remoteDataSource: IweatherRemoteDataSource,
+            localDataSource: IWeatherLocalDataSource
         ): WeatherRepository {
             return instance ?: synchronized(this) {
                 instance ?: WeatherRepository(remoteDataSource,localDataSource).also { instance = it }
@@ -38,11 +40,9 @@ class WeatherRepository private constructor(
         }
 
     }
-
     override suspend fun getCurrentWeather( lat : Double,lan : Double , apiKey :String, temp : String , lang : String  ): WeatherResponse? {
         val response = _weatherRemoteDataSource.getWeatherOverNetwork( lat,lan,apiKey,temp,lang)
         return if (response.isSuccessful) {
-            // Return the response body
             Log.i(
                 "TAG",
                 "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<getWeatherDetails: ${response.body()}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
@@ -53,7 +53,6 @@ class WeatherRepository private constructor(
             null // Return null in case of error
         }
     }
-
 
     override suspend fun getWeatherDetails( lat : Double, lan : Double, apiKey :String , temp : String, lang :String ): DetailsResponse? {
         val response = _weatherRemoteDataSource.getDetailsOverNetwork(lat, lan,apiKey , temp ,lang)
