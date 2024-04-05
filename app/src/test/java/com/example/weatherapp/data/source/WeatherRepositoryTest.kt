@@ -37,9 +37,12 @@ class WeatherRepositoryTest {
 
     @Before
     fun setUp() {
+
+
         fakeLocalDataSource = FakeLocalDataSource(locationsList,calendersList)
         fakeRemoteDataSource = FakeRemoteDataSource()
         repo =WeatherRepository.getInstance(fakeRemoteDataSource,fakeLocalDataSource)
+
     }
 
 
@@ -90,4 +93,28 @@ class WeatherRepositoryTest {
         //assertThat(result, nullValue())
 
     }
+
+    @Test
+    fun testDeleteCalender()= runBlocking {
+        //When
+        //repo.insertCalender(cale2)
+        repo.deleteCalender(cale2)
+        repo.deleteCalender(cale1)
+        val result=repo.getAllSavedCalender().first()
+        //Then
+        assertEquals(result.count(),0)
+    }
+
+    @Test
+    fun testDeleteLocation()= runBlocking{
+        //When
+        repo.deleteLocation(location1)
+        repo.deleteLocation(location2)
+        val result=repo.getAllSavedLocation().first()
+
+        //Then
+        assertEquals(result.count(),0)
+    }
+
+
 }
