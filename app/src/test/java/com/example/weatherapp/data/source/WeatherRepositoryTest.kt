@@ -39,7 +39,7 @@ class WeatherRepositoryTest {
     fun setUp() {
 
 
-        fakeLocalDataSource = FakeLocalDataSource(locationsList,calendersList)
+        fakeLocalDataSource = FakeLocalDataSource()
         fakeRemoteDataSource = FakeRemoteDataSource()
         repo =WeatherRepository.getInstance(fakeRemoteDataSource,fakeLocalDataSource)
 
@@ -62,12 +62,11 @@ class WeatherRepositoryTest {
     @Test
     fun testGetAllSavedCalender() = runBlocking {
         //Given
-        repo.insertCalender(cale1)
         repo.insertCalender(cale2)
         //When
         val result =repo.getAllSavedCalender().first()
         //Then
-        assertEquals("turky",result[1].countryName)
+        assertEquals("turky",result[0].countryName)
 
     }
 

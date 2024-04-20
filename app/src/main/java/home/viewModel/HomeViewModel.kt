@@ -18,8 +18,11 @@ import retrofit2.Response
 import utility.ApiState
 
 class HomeViewModel (private  val _irepo : IWeatherRepository) : ViewModel() {
-    private var _weather : MutableLiveData<WeatherResponse> = MutableLiveData<WeatherResponse>()
-    val weather : LiveData<WeatherResponse> = _weather
+//    private var _weather : MutableLiveData<WeatherResponse> = MutableLiveData<WeatherResponse>()
+//    val weather : LiveData<WeatherResponse> = _weather
+
+    private var _weather : MutableStateFlow<ApiState> = MutableStateFlow<ApiState>(ApiState.Loading)
+    val weather : StateFlow<ApiState> = _weather
 
     private var _details : MutableLiveData<DetailsResponse> = MutableLiveData<DetailsResponse>()
     val details : LiveData<DetailsResponse> = _details
@@ -27,13 +30,21 @@ class HomeViewModel (private  val _irepo : IWeatherRepository) : ViewModel() {
     private var _fiveDays : MutableLiveData<List<WeatherData>> = MutableLiveData<List<WeatherData>>()
     val fiveDays : LiveData<List<WeatherData>> = _fiveDays
 
-    fun getCurrentWeather( lat : Double, lan : Double, apiKey :String ,  temp : String , lang : String  ){
-        viewModelScope.launch{
-            _weather.postValue(_irepo.getCurrentWeather(lat,lan,apiKey,temp,lang))
+    fun getCurrentWeather( lat : Double, lan : Double, apiKey :String ,  temp : String , lang : String  )=viewModelScope.launch{
+        viewModelScope.launch(Dispatchers.IO){
+            try {
+                _irepo.getCurrentWeather(lat,lan,apiKey,temp,lang)
+                    .collect {
+                        _weather.value = ApiState.Success(it)
+                    }
+            }catch (e : Throwable){
+                _weather.value=ApiState.Failure(e)
+            }
         }
     }
-    fun getWeatherDetails(lat : Double, lan : Double, apiKey :String ,  temp : String , lang : String  ){
-        viewModelScope.launch {
+    fun getWeatherDetails(lat : Double, lan : Double, apiKey :String ,  temp : String , lang : String  )=viewModelScope.launch{
+        viewModelScope.launch(Dispatchers.IO) {
+
             _details.postValue(_irepo.getWeatherDetails(lat,lan,apiKey,temp,lang))
         }
     }

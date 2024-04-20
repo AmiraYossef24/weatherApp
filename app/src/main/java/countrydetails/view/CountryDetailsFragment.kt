@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -20,8 +21,10 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,6 +42,7 @@ import model.WeatherRepository
 import network.weatherRemoteDataSource
 import setting.viewModel.SettingViewModel
 import setting.viewModel.SettingViewModelFactory
+import utility.ApiState
 import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -48,6 +52,7 @@ import java.util.Locale
 
 class CountryDetailsFragment : Fragment() {
 
+    lateinit var progress:ProgressBar
     lateinit  var text : TextView
     lateinit var minMax : TextView
     lateinit var degree : TextView
@@ -138,6 +143,7 @@ class CountryDetailsFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        progress=view.findViewById(R.id.myProgressBarID)
         text = view.findViewById(R.id.myDetailsTxView)
         degree=view.findViewById(R.id.degreeDetailsTxID)
         date=view.findViewById(R.id.dateDetailsTxId)
@@ -286,18 +292,114 @@ class CountryDetailsFragment : Fragment() {
         }
 
 
-        viewModel.weather.observe(viewLifecycleOwner) { current_weather ->
-            min=current_weather.main.temp_min
-            max=current_weather.main.temp_max
-            text.text = nameStr
-            minMax.text = convertToCelsiusString(min,max)
-            degree.text=current_weather.getTemperatureInCelsius()
-            date.text=current_weather.getDayOfWeek()
-            desc.text=current_weather.weather.get(0).description
-            country.text=current_weather.sys.country
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.weather.collectLatest { result ->
+                    when(result){
+                        is ApiState.Loading -> {
+                            progress.visibility = View.VISIBLE
+                            minMax.visibility = View.GONE
+                            text.visibility = View.GONE
+                            degree.visibility = View.GONE
+                            date.visibility = View.GONE
+                            desc.visibility = View.GONE
+                            country.visibility = View.GONE
 
-            Log.i("TAG", "onViewCreated:  The WEAAA = $current_weather ")
+                            recyclerView.visibility=View.GONE
+
+                            day1Name.visibility=View.GONE
+                            day1Des.visibility=View.GONE
+                            day1Temp.visibility=View.GONE
+
+                            day2Name.visibility=View.GONE
+                            day2Des.visibility=View.GONE
+                            day2Temp.visibility=View.GONE
+
+                            day3Name.visibility=View.GONE
+                            day3Des.visibility=View.GONE
+                            day3Temp.visibility=View.GONE
+
+                            day4Name.visibility=View.GONE
+                            day4Des.visibility=View.GONE
+                            day4Temp.visibility=View.GONE
+
+                            day5Name.visibility=View.GONE
+                            day5Des.visibility=View.GONE
+                            day5Temp.visibility=View.GONE
+                        }
+
+                        is ApiState.Success ->{
+
+                            progress.visibility = View.GONE
+                            minMax.visibility = View.VISIBLE
+                            minMax.text = convertToCelsiusString(min,max)
+                            text.visibility = View.VISIBLE
+
+                            text.text = result.data.name
+                            degree.visibility = View.VISIBLE
+                            degree.text=result.data.getTemperatureInCelsius()
+                            date.visibility = View.VISIBLE
+                            date.text=result.data.getDayOfWeek()
+                            desc.visibility = View.VISIBLE
+                            desc.text=result.data.weather.get(0).description
+                            country.visibility = View.VISIBLE
+                            country.text=result.data.sys.country
+
+                            recyclerView.visibility=View.VISIBLE
+
+                            day1Name.visibility=View.VISIBLE
+                            day1Des.visibility=View.VISIBLE
+                            day1Temp.visibility=View.VISIBLE
+
+                            day2Name.visibility=View.VISIBLE
+                            day2Des.visibility=View.VISIBLE
+                            day2Temp.visibility=View.VISIBLE
+
+                            day3Name.visibility=View.VISIBLE
+                            day3Des.visibility=View.VISIBLE
+                            day3Temp.visibility=View.VISIBLE
+
+                            day4Name.visibility=View.VISIBLE
+                            day4Des.visibility=View.VISIBLE
+                            day4Temp.visibility=View.VISIBLE
+
+                            day5Name.visibility=View.VISIBLE
+                            day5Des.visibility=View.VISIBLE
+                            day5Temp.visibility=View.VISIBLE
+
+                        }
+
+                        else  -> {
+                            progress.visibility = View.GONE
+                            minMax.visibility = View.GONE
+                            text.visibility = View.GONE
+                            degree.visibility = View.GONE
+                            date.visibility = View.GONE
+                            desc.visibility = View.GONE
+                            country.visibility = View.GONE
+
+                        }
+
+
+
+                    }
+                }
+            }
+
         }
+//
+//        viewModel.weather.observe(viewLifecycleOwner) { current_weather ->
+//            min=current_weather.main.temp_min
+//            max=current_weather.main.temp_max
+//            text.text = nameStr
+//            minMax.text = convertToCelsiusString(min,max)
+//            degree.text=current_weather.getTemperatureInCelsius()
+//            date.text=current_weather.getDayOfWeek()
+//            desc.text=current_weather.weather.get(0).description
+//            country.text=current_weather.sys.country
+//
+//            Log.i("TAG", "onViewCreated:  The WEAAA = $current_weather ")
+//        }
         val layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL,false)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager

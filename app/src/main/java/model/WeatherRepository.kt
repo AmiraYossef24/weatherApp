@@ -40,30 +40,16 @@ class WeatherRepository private constructor(
         }
 
     }
-    override suspend fun getCurrentWeather( lat : Double,lan : Double , apiKey :String, temp : String , lang : String  ): WeatherResponse? {
+    override suspend fun getCurrentWeather( lat : Double,lan : Double , apiKey :String, temp : String , lang : String  ): StateFlow<WeatherResponse> {
         val response = _weatherRemoteDataSource.getWeatherOverNetwork( lat,lan,apiKey,temp,lang)
-        return if (response.isSuccessful) {
-            Log.i(
-                "TAG",
-                "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<getWeatherDetails: ${response.body()}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-            )
-            response.body()
-        } else {
-            Log.i("TAG", response.errorBody()?.string() ?: "Unknown error")
-            null // Return null in case of error
-        }
+        return response
     }
 
     override suspend fun getWeatherDetails( lat : Double, lan : Double, apiKey :String , temp : String, lang :String ): DetailsResponse? {
         val response = _weatherRemoteDataSource.getDetailsOverNetwork(lat, lan,apiKey , temp ,lang)
         return if (response.isSuccessful) {
-            Log.i(
-                "TAG",
-                "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<getWeatherDetails: ${response.body()}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-            )
             response.body()
         } else {
-            Log.i("TAG", response.errorBody()?.string() ?: "Unknown error")
             null // Return null in case of error
         }
     }

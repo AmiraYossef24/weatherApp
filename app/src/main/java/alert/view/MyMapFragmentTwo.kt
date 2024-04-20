@@ -50,6 +50,7 @@ import home.viewModel.HomeViewModel
 import home.viewModel.HomeViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import model.Calender
@@ -222,9 +223,14 @@ class MyMapFragmentTwo : Fragment() , OnMapReadyCallback {
                         val location = Location(locationName, latLng.latitude, latLng.longitude)
                         homeViewModel.getCurrentWeather(latLng.latitude,latLng.longitude,API_KEY,"metric","en")
 
-                        homeViewModel.weather.observe(viewLifecycleOwner){
-                            des= it.weather[0].description
+                        lifecycleScope.launch {
+                            homeViewModel.weather.collectLatest {
+                                //des=it.
+                            }
                         }
+//                        homeViewModel.weather.observe(viewLifecycleOwner){
+//                            des= it.weather[0].description
+//                        }
 
                         Toast.makeText(requireContext(), "Inserted $locationName", Toast.LENGTH_SHORT).show()
                         showPicker(locationName, latLng.latitude, latLng.longitude)

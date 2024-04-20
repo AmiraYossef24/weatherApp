@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import retrofit2.Response
 
 interface IWeatherRepository {
-    suspend fun getCurrentWeather( lat : Double,lan : Double , apiKey :String, temp : String , lang : String  ): WeatherResponse?
+    suspend fun getCurrentWeather( lat : Double,lan : Double , apiKey :String, temp : String , lang : String  ): StateFlow<WeatherResponse>
     suspend fun getWeatherDetails( lat : Double, lan : Double, apiKey :String , temp : String, lang :String ): DetailsResponse?
     suspend fun getWeatherForecast( lat: Double, lan: Double, apiKey: String , temp :String, lang:String): List<WeatherData>
     suspend  fun getAllSavedLocation() : Flow<List<Location>>

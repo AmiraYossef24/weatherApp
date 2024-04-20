@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import model.Location
 import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.CoreMatchers.not
@@ -43,7 +44,7 @@ class SavedLocationsViewModelTest{
     }
 
     @Test
-    fun testGetAllSavedLocations()= runBlockingTest{
+    fun testGetAllSavedLocations()= runTest{
 
         //When
          viewModel.getAllSavedLocations()

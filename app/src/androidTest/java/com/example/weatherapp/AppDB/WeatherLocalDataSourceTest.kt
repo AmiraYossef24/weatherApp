@@ -8,6 +8,7 @@ import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import model.Location
 import org.hamcrest.CoreMatchers.equalTo
@@ -20,7 +21,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 
-@MediumTest
+@MediumTest //because we will test localDataSource and DAO together
+@ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 class WeatherLocalDataSourceTest {
 

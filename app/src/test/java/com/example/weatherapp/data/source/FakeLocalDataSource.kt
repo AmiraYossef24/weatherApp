@@ -6,8 +6,11 @@ import kotlinx.coroutines.flow.flow
 import model.Calender
 import model.Location
 
-class FakeLocalDataSource(private val myList: MutableList<Location>?, private val myClendarList : MutableList<Calender>?) :
+class FakeLocalDataSource :
     IWeatherLocalDataSource {
+    private val myList= mutableListOf<Location>()
+    private val myClendarList= mutableListOf<Calender>()
+
 
     override suspend fun insertLocation(location: Location) {
         myList?.add(location)
