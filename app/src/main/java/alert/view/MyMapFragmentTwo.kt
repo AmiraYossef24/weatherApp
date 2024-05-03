@@ -83,7 +83,7 @@ class MyMapFragmentTwo : Fragment() , OnMapReadyCallback {
     lateinit var homeViewModelFactory: HomeViewModelFactory
     private val sharedFlow = MutableSharedFlow<String>()
     private val API_KEY="af0b74520668db5033dea0b93e9a70c3"
-    lateinit var des : String
+    private  var des : String = ""
 
 
 
@@ -221,13 +221,13 @@ class MyMapFragmentTwo : Fragment() , OnMapReadyCallback {
                             adminArea
                         } ?: countryName // If no detailed location information is available, fallback to country name
                         val location = Location(locationName, latLng.latitude, latLng.longitude)
-                        homeViewModel.getCurrentWeather(latLng.latitude,latLng.longitude,API_KEY,"metric","en")
+                       // homeViewModel.getCurrentWeather(latLng.latitude,latLng.longitude,API_KEY,"metric","en")
 
-                        lifecycleScope.launch {
-                            homeViewModel.weather.collectLatest {
-                                //des=it.
-                            }
-                        }
+//                        lifecycleScope.launch {
+//                            homeViewModel.weather.collectLatest {
+//                                //des=it.
+//                            }
+//                        }
 //                        homeViewModel.weather.observe(viewLifecycleOwner){
 //                            des= it.weather[0].description
 //                        }
@@ -244,9 +244,7 @@ class MyMapFragmentTwo : Fragment() , OnMapReadyCallback {
 
             }
 
-
             snackbar.show()
-            // Perform reverse geocoding to get the address from coordinates
 
         }
     }
@@ -330,7 +328,12 @@ class MyMapFragmentTwo : Fragment() , OnMapReadyCallback {
                 Log.i("TAG", "here is selectedDateTime = ${selectedDateTime}: ")
                 viewModel.insert(calender)
 
-
+//                viewModel.getAlertDescription(lat,lan,API_KEY,"metric","en")
+//                lifecycleScope.launch {
+//                    viewModel.weather.collectLatest {
+//                        des=it.weather.get(0).description
+//                    }
+//                }
                 Log.i("TAG", "cuntry name and des from my map 2 = ${countryName} , des = ${des}")
 
                 val inputData = Data.Builder()

@@ -34,6 +34,7 @@ import saved.viewModel.SavedViewModelFactory
 import setting.viewModel.SettingViewModel
 import setting.viewModel.SettingViewModelFactory
 import home.view.HomeFragment
+import search.view.myMapFragmentDirections
 import splashscreen.view.InitialFragmentDirections
 import java.util.Locale
 
@@ -140,10 +141,10 @@ class SettingFragment : Fragment() {
 
         myNavigationView.setNavigationItemSelectedListener { menuItem ->
             if (menuItem.itemId == R.id.nav_home) {
-                Toast.makeText(requireContext(),"home clicked ", Toast.LENGTH_LONG).show()
+                val action = SettingFragmentDirections.actionSettingFragmentToHomeFragment("","","GPS")
                 val navController =
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-                navController.navigate(R.id.homeFragment)
+                navController.navigate(action)
             }
             if (menuItem.itemId == R.id.nav_save) {
                 val navController =

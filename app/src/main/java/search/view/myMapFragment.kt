@@ -118,10 +118,11 @@ class myMapFragment : Fragment() ,OnMapReadyCallback {
 
         myNavigationView.setNavigationItemSelectedListener { menuItem ->
             if (menuItem.itemId == R.id.nav_home) {
-                Toast.makeText(requireContext(),"home clicked ",Toast.LENGTH_LONG).show()
+
+                val action = myMapFragmentDirections.actionMyMapFragmentToHomeFragment("","","GPS")
                 val navController =
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-                navController.navigate(R.id.homeFragment)
+                navController.navigate(action)
             }
             if (menuItem.itemId == R.id.nav_save) {
                 val navController =
@@ -176,7 +177,10 @@ class myMapFragment : Fragment() ,OnMapReadyCallback {
                         } ?: countryName // If no detailed location information is available, fallback to country name
                         val location = Location(locationName, latLng.latitude, latLng.longitude)
                         viewModel.insert(location)
-                        Toast.makeText(requireContext(), "Inserted $locationName", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "Saved $locationName", Toast.LENGTH_SHORT).show()
+                        val navController =
+                            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                        navController.navigate(R.id.savedLocationFragment)
                         Log.i("TAG", "lat from map fragment =: ${latLng.latitude} ")
                         Log.i("TAG", "lon from map fragment =: ${latLng.longitude} ")
 

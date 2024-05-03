@@ -37,8 +37,11 @@
     <string name="setting">Setting</string>
     <string name="today">Today</string>
     <string name="cancel_action_label">Cancel</string>
-    <string name="welcome_msg">Welcome</string>
-    <string name="savedl">Saved Locations</string>
+    <string name="welcome_msg">Welcome \n      to Sky Watch</string>
+    <string name="savedl">Saved Countries</string>
+    <string name="noData">No Data Found</string>
+    <string name="alertKeyWord">Alert</string>
+    <string name="noAlert">No Alerts Found</string>
 
 
 </resources>

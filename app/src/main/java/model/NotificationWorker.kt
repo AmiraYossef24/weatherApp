@@ -71,7 +71,7 @@ class NotificationWorker(context: Context, parameters: WorkerParameters) :
 
         val notification = NotificationCompat.Builder(applicationContext, "default_channel_id")
             .setContentTitle(countryName)
-            .setContentText("${des}, be careful!")
+            .setContentText("${des} Remember to show the weather there!")
             .setSmallIcon(R.drawable.sunny)
             .addAction(R.drawable.cancel, "Dismiss", dismissPendingIntent)
             .build()

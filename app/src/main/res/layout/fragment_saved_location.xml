@@ -36,13 +36,34 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
+        <ImageView
+            android:id="@+id/boxImageID"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="124dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/emptyboxx" />
+
+        <TextView
+            android:id="@+id/naDataTxID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:text="@string/noData"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/savedRecycleID"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_weight="10">
+            android:layout_weight="9">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -53,8 +74,9 @@
             android:layout_gravity="bottom|end"
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginBottom="24dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:clickable="true"
             android:src="@android:drawable/ic_input_add"
             app:backgroundTint="@color/baby_blue"

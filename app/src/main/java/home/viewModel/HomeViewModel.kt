@@ -30,7 +30,7 @@ class HomeViewModel (private  val _irepo : IWeatherRepository) : ViewModel() {
     private var _fiveDays : MutableLiveData<List<WeatherData>> = MutableLiveData<List<WeatherData>>()
     val fiveDays : LiveData<List<WeatherData>> = _fiveDays
 
-    fun getCurrentWeather( lat : Double, lan : Double, apiKey :String ,  temp : String , lang : String  )=viewModelScope.launch{
+    fun getCurrentWeather( lat : Double, lan : Double, apiKey :String ,  temp : String , lang : String  )= viewModelScope.launch{
         viewModelScope.launch(Dispatchers.IO){
             try {
                 _irepo.getCurrentWeather(lat,lan,apiKey,temp,lang)

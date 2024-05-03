@@ -40,6 +40,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import model.WeatherRepository
 import network.weatherRemoteDataSource
+import saved.view.SavedLocationFragmentDirections
 import setting.viewModel.SettingViewModel
 import setting.viewModel.SettingViewModelFactory
 import utility.ApiState
@@ -279,9 +280,10 @@ class CountryDetailsFragment : Fragment() {
                 navController.navigate(R.id.myMapFragment)
             }
             if (menuItem.itemId == R.id.nav_home) {
+                val action = SavedLocationFragmentDirections.actionSavedLocationFragmentToHomeFragment("","","GPS")
                 val navController =
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-                navController.navigate(R.id.homeFragment)
+                navController.navigate(action)
             }
             if (menuItem.itemId == R.id.nav_save) {
                 val navController =
@@ -335,7 +337,8 @@ class CountryDetailsFragment : Fragment() {
                             minMax.text = convertToCelsiusString(min,max)
                             text.visibility = View.VISIBLE
 
-                            text.text = result.data.name
+                            text.text = countryName
+
                             degree.visibility = View.VISIBLE
                             degree.text=result.data.getTemperatureInCelsius()
                             date.visibility = View.VISIBLE
@@ -344,7 +347,6 @@ class CountryDetailsFragment : Fragment() {
                             desc.text=result.data.weather.get(0).description
                             country.visibility = View.VISIBLE
                             country.text=result.data.sys.country
-
                             recyclerView.visibility=View.VISIBLE
 
                             day1Name.visibility=View.VISIBLE

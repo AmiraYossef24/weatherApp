@@ -37,8 +37,12 @@
     <string name="mile">ميل / الساعه</string>
     <string name="setting">الإعدادات</string>
     <string name="today">اليوم</string>
-    <string name="cancel_action_label">Cancel</string>
-    <string name="welcome_msg">Welcome to \nSky Watch</string>
-    <string name="savedl">Saved Locations</string>
+    <string name="cancel_action_label">الغاء</string>
+    <string name="welcome_msg">مرحبا فى \n مشاهده السماء</string>
+    <string name="savedl">الدول المحفوظه</string>
+    <string name="noData">لاتوجد بيانات</string>
+    <string name="alertKeyWord">المنبه</string>
+    <string name="noAlert">لايوجد منبهات</string>
+
 
 </resources>

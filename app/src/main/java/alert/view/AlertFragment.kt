@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
@@ -23,6 +25,7 @@ import network.weatherRemoteDataSource
 import saved.view.SavedListAdapter
 import saved.viewModel.SavedViewModel
 import saved.viewModel.SavedViewModelFactory
+import search.view.myMapFragmentDirections
 
 class AlertFragment : Fragment() {
 
@@ -35,6 +38,8 @@ class AlertFragment : Fragment() {
     lateinit var alertViewModel: AlertViewModel
     lateinit var adapter: AlertListAdapter
     lateinit var myRecyclerView: RecyclerView
+    lateinit var alertImae:ImageView
+    lateinit var noAlert : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +56,8 @@ class AlertFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        alertImae=view.findViewById(R.id.alertImageID)
+        noAlert=view.findViewById(R.id.noAlertTxId)
         weatherAnimationView=view.findViewById(R.id.alertAnimationView)
         myRecyclerView=view.findViewById(R.id.alertRecycleID)
         weatherAnimationView.setAnimation(R.raw.snow_anim)
@@ -78,6 +85,10 @@ class AlertFragment : Fragment() {
 
         lifecycleScope.launch {
             alertViewModel.calenderList.collect() {
+                if(it.count()==0){
+                    alertImae.visibility=View.VISIBLE
+                    noAlert.visibility=View.VISIBLE
+                }
                 adapter.submitDetailsList(it)
             }
         }
@@ -91,9 +102,10 @@ class AlertFragment : Fragment() {
 
         myNavigationView.setNavigationItemSelectedListener { menuItem ->
             if (menuItem.itemId == R.id.nav_home) {
+                val action = AlertFragmentDirections.actionAlertFragmentToHomeFragment("","","GPS")
                 val navController =
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-                navController.navigate(R.id.homeFragment)
+                navController.navigate(action)
             }
             if (menuItem.itemId == R.id.nav_search) {
                 val navController =

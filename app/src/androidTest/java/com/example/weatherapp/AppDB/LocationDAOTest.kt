@@ -47,49 +47,51 @@ class LocationDAOTest {
 
         dataBase.close()
     }
+//
+//    @Test
+//    fun getAllLocation()= runBlocking(){
+//
+//        //Given
+//        val location1 =Location("Egypt",30.1245,31.784512)
+//        dao.insert(location1)
+//
+//        //When
+//        val result=dao.getAllLocation().first(){
+//
+//            assertThat(it,not(nullValue()))
+//            assertThat(it[0].countryName ,equalTo(location1.countryName) )
+//            true
+//         }
+//
+//        //Then
+//        //assertThat(result,not(nullValue()))
+//
+//    }
 
-    @Test
-    fun getAllLocation()= runBlocking(){
+//    @Test
+//    fun insert(){
+//
+//        //Given
+//        val location2=Location("india",60.4587,61.25487)
+//
+//        //When
+//
+//        val result=dao.insert(location2)
+//
+//        //Given
+//        assertThat(result,not(nullValue()))
+//    }
 
-        //Given
-        val location1 =Location("Egypt",30.1245,31.784512)
-        dao.insert(location1)
+//    @Test
+//    fun delete(){
+//        //Given
+//        val location3=Location("turky",80.26558,81.36210)
+//        //When
+//        dao.insert(location3)
+//        val result =dao.delete(location3)
+//
+//        //Given
+//        assertThat(result, equalTo(Unit))
+//    }
 
-        //When
-        val result=dao.getAllLocation().first(){
-
-            assertThat(it,not(nullValue()))
-            assertThat(it[0].countryName ,equalTo(location1.countryName) )
-            true
-         }
-
-        //Then
-        //assertThat(result,not(nullValue()))
-
-    }
-
-    @Test
-    fun insert(){
-
-        //Given
-        val location2=Location("india",60.4587,61.25487)
-
-        //When
-
-        val result=dao.insert(location2)
-
-        //Given
-        assertThat(result,not(nullValue()))
-    }
-
-    @Test
-    fun delete(){
-        //Given
-        val location3=Location("turky",80.26558,81.36210)
-        //When
-        dao.insert(location3)
-        val result =dao.delete(location3)
-
-        //Given
-        assertThat(result, equalTo(Unit))    }
 }

@@ -8,18 +8,18 @@
         android:title="@string/home" />
     <item
         android:id="@+id/nav_search"
-        android:icon="@drawable/map2"
+        android:icon="@drawable/lastmap"
         android:title="@string/map" />
 
     <item
         android:id="@+id/nav_save"
-        android:icon="@drawable/saved"
+        android:icon="@drawable/savedplus"
         android:title="@string/saved" />
 
     <item
         android:id="@+id/nav_alert"
         android:icon="@drawable/alert"
-        android:title="@string/alert" />
+        android:title="@string/alertKeyWord" />
 
     <item
         android:id="@+id/nav_setting"

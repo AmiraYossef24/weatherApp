@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
@@ -35,6 +36,7 @@ import model.WeatherRepository
 import network.weatherRemoteDataSource
 import saved.viewModel.SavedViewModel
 import saved.viewModel.SavedViewModelFactory
+import search.view.myMapFragmentDirections
 
 
 class SavedLocationFragment : Fragment() {
@@ -50,6 +52,8 @@ class SavedLocationFragment : Fragment() {
     lateinit var navController : NavController
     lateinit var myNavigationView: NavigationView
     private val sharedFlow = MutableSharedFlow<List<Location>>()
+    lateinit var boxImage : ImageView
+    lateinit var nodata:TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +72,8 @@ class SavedLocationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        boxImage=view.findViewById(R.id.boxImageID)
+        nodata=view.findViewById(R.id.naDataTxID)
         animationView=view.findViewById(R.id.savedAnimationView)
         savedRecycle=view.findViewById(R.id.savedRecycleID)
         search=view.findViewById(R.id.savedSearchID)
@@ -85,15 +91,20 @@ class SavedLocationFragment : Fragment() {
         }
         myNavigationView.setNavigationItemSelectedListener { menuItem ->
             if (menuItem.itemId == R.id.nav_home) {
-                Toast.makeText(requireContext(),"home clicked ", Toast.LENGTH_LONG).show()
+                val action = SavedLocationFragmentDirections.actionSavedLocationFragmentToHomeFragment("","","GPS")
                 val navController =
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-                navController.navigate(R.id.homeFragment)
+                navController.navigate(action)
             }
             if (menuItem.itemId == R.id.nav_search) {
                 val navController =
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
                 navController.navigate(R.id.myMapFragment)
+            }
+            if (menuItem.itemId == R.id.nav_alert) {
+                val navController =
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                navController.navigate(R.id.alertFragment)
             }
             if (menuItem.itemId == R.id.nav_setting) {
                 val navController =
@@ -121,6 +132,11 @@ class SavedLocationFragment : Fragment() {
 
         lifecycleScope.launch {
             savedViewModel.locationList.collect() {
+                if(it.count()==0){
+
+                    boxImage.visibility=View.VISIBLE
+                    nodata.visibility=View.VISIBLE
+                }
                 adapter.submitLocationsList(it)
             }
         }
