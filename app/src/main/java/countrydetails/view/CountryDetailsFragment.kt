@@ -280,7 +280,7 @@ class CountryDetailsFragment : Fragment() {
                 navController.navigate(R.id.myMapFragment)
             }
             if (menuItem.itemId == R.id.nav_home) {
-                val action = SavedLocationFragmentDirections.actionSavedLocationFragmentToHomeFragment("","","GPS")
+                val action = CountryDetailsFragmentDirections.actionCountryDetailsFragment2ToHomeFragment("","","GPS")
                 val navController =
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
                 navController.navigate(action)
